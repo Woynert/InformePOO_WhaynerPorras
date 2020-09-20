@@ -24,16 +24,80 @@ namespace BlackJack
         public BitmapImage imgCorazon = new BitmapImage(new Uri(@"Resources/Corazon.png", UriKind.Relative));
         Dealer dealer = new Dealer();
 
+        List<Card> leftCards = new List<Card>();
+        List<Card> rightCards = new List<Card>();
+
+        int[,] rightPos = new int[9, 3]; //0X 1Y 3Angle
+        int[,] leftPos = new int[9, 3]; //0X 1Y 3Angle
+
+
+
         public Game()
         {
             InitializeComponent();
             //iniciar
+            setCardPos();
             dealer.Init();
+        }
+        
+        private void setCardPos()
+        { 
+            
+            //Asignar coordenadas
+            Grid _grdSel = grdRightPos1;
+            TransformGroup _rot = new TransformGroup();
+
+            for(int l = 0; l < 9; l++)
+            {
+                switch(l){
+                    case 0: _grdSel = grdRightPos1; break;
+                    case 1: _grdSel = grdRightPos2; break;
+                    case 2: _grdSel = grdRightPos3; break;
+                    case 3: _grdSel = grdRightPos4; break;
+                    case 4: _grdSel = grdRightPos5; break;
+                    case 5: _grdSel = grdRightPos6; break;
+                    case 6: _grdSel = grdRightPos7; break;
+                    case 7: _grdSel = grdRightPos8; break;
+                    case 8: _grdSel = grdRightPos9; break;
+                }
+
+                //Posición
+                rightPos[l, 0] = Convert.ToInt32(_grdSel.Margin.Left);
+                rightPos[l, 1] = Convert.ToInt32(_grdSel.Margin.Top);
+
+                //Rotación
+                _rot = (TransformGroup)_grdSel.RenderTransform;
+                foreach (Transform t in _rot.Children)
+                {
+                    if (t is RotateTransform)
+                    {
+                        RotateTransform _r = (RotateTransform)t;
+                        rightPos[l, 2] = Convert.ToInt32(_r.Angle);
+                    }
+                }
+                _grdSel.Visibility = Visibility.Hidden;
+                //MessageBox.Show("Current rotation angle : " + rightPos[l, 0].ToString());
+            }
+            
         }
 
         private void btnPedir_Click(object sender, RoutedEventArgs e) //Pedir
         {
-            imgImage.Source = imgCorazon;// new BitmapImage(new Uri(@"Resources/Corazon.png", UriKind.Relative));
+            Card card = dealer.Deal(); 
+            rightCards.Add(card);
+            Grid _card = DrawCard(500, 300, card.Symbol, card.Suit);
+            Animate(_card, 500, 500, 0);
+            Animate(_card, rightPos[rightCards.Count - 1, 0], rightPos[rightCards.Count - 1, 1], 0);// rightPos[rightCards.Count - 1, 2]);
+        }
+
+        private void btnPlantar_Click(object sender, RoutedEventArgs e) //Plantarse
+        {
+            int cont = 0;
+            foreach (Card card in dealer.deck)
+            {
+                DrawCard(150 * (cont - card.Suit * 13), 200 * card.Suit, card.Symbol, card.Suit);
+                cont++;
+            }
         }
 
         private int Check(List<Card> hand) //Sacar Valor
@@ -46,23 +110,7 @@ namespace BlackJack
             return (val);
         }
 
-        private void btnPlantar_Click(object sender, RoutedEventArgs e) //Plantarse
-        {
-            imgImagePlace.Source = new BitmapImage(new Uri(@"Resources/rect1678-5-1.png", UriKind.Relative));
-
-            int cont = 0;
-            foreach (Card card in dealer.deck)
-            {
-                //DrawCard(0, 0, card.symbol, card.suit);
-                DrawCard(150 * (cont - card.suit * 13), 200 * card.suit, card.symbol, card.suit);
-                cont++;
-            }
-            //DrawCard(10, 100, 13, 3);
-            //DrawCard(110, 100, 11, 0);
-            //DrawCard(210, 100, 4, 1);
-        }
-
-        private void DrawCard(int x, int y, int symbol, int suit)
+        private Grid DrawCard(int x, int y, int symbol, int suit)
         {
            
             int wt = 121;
@@ -72,9 +120,9 @@ namespace BlackJack
 
             //Color borde
             Color ColorStroke = new Color(); ColorStroke.A = 255; ColorStroke.R = 207; ColorStroke.G = ColorStroke.R; ColorStroke.B = ColorStroke.R;
-
-            Color ColorValue;
+            
             //Color Letra
+            Color ColorValue;
             if (suit > 1) //Trevor, Pica
             {
                 ColorValue = new Color(); ColorValue.A = 255; ColorValue.R = 0; ColorValue.G = 0; ColorValue.B = 0;
@@ -158,17 +206,28 @@ namespace BlackJack
             lblNew.Margin = marginValue;
 
             //Icono
+            Thickness marginIcon = new Thickness(0, 20, 0, 0);
+            imgNew.Margin = marginIcon;
+
             imgNew.Width = 89; imgNew.Height = imgNew.Width;
             imgNew.Source = btmIcon;// new BitmapImage(new Uri(@"Resources/Pica.png", UriKind.Relative));
 
+            return (grdNew);
         }
 
-        private void Animate(Control obj)
+        private void Animate(Grid obj, int x, int y, int angle)
         {
+            int wt = Convert.ToInt32(obj.ActualWidth / 2);
+            int ht = Convert.ToInt32(obj.ActualHeight / 2);
+
             //Crear transforms
             RotateTransform myRotateTransform = new RotateTransform();
             TranslateTransform myTranslate = new TranslateTransform();
+            myTranslate.X = Convert.ToInt32(obj.Margin.Left);
+            myTranslate.Y = Convert.ToInt32(obj.Margin.Top);
             ScaleTransform myScaleTransform = new ScaleTransform();
+            myRotateTransform.CenterX = wt;
+            myRotateTransform.CenterY = ht; 
 
             //Asignar
             TransformGroup myTransformGroup = new TransformGroup();
@@ -178,14 +237,18 @@ namespace BlackJack
             obj.RenderTransform = myTransformGroup;
 
             //Animar
-            DoubleAnimation aniX = new DoubleAnimation(0, 1000, TimeSpan.FromSeconds(5));
-            DoubleAnimation aniY = new DoubleAnimation(0, 0, TimeSpan.FromSeconds(5));
-            DoubleAnimation aniAngle = new DoubleAnimation(0, 45, TimeSpan.FromSeconds(5));
+            DoubleAnimation aniX = new DoubleAnimation(Convert.ToInt32(obj.Margin.Left), x, TimeSpan.FromSeconds(1));
+            DoubleAnimation aniY = new DoubleAnimation(Convert.ToInt32(obj.Margin.Top), y, TimeSpan.FromSeconds(1));
+            DoubleAnimation aniAngle = new DoubleAnimation(0, angle, TimeSpan.FromSeconds(0));
+            DoubleAnimation aniCenterX = new DoubleAnimation(wt, x+wt, TimeSpan.FromSeconds(0));
+            DoubleAnimation aniCenterY = new DoubleAnimation(ht, y+ht, TimeSpan.FromSeconds(0));
 
             //Empezar
             myTranslate.BeginAnimation(TranslateTransform.XProperty, aniX);
             myTranslate.BeginAnimation(TranslateTransform.YProperty, aniY);
             myRotateTransform.BeginAnimation(RotateTransform.AngleProperty, aniAngle);
+            myRotateTransform.BeginAnimation(RotateTransform.CenterXProperty, aniCenterX);
+            myRotateTransform.BeginAnimation(RotateTransform.CenterYProperty, aniCenterY);
         }
     }
 }

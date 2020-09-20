@@ -8,9 +8,8 @@ namespace BlackJack
 {
     class Card
     {
-        public int suit; //0Corazon 1Diamante 2Trevor 3Pica
-        public int symbol; //11J 12Q 13K
-
+        int suit; //0Corazon 1Diamante 2Trevor 3Pica
+        int symbol; //11J 12Q 13K
         int score; //1->11
         int color; //0Negro 1Rojo
 
