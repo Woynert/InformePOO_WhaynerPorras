@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -45,44 +46,105 @@ namespace BlackJack
         private void btnPlantar_Click(object sender, RoutedEventArgs e) //Plantarse
         {
             imgImagePlace.Source = new BitmapImage(new Uri(@"Resources/rect1678-5-1.png", UriKind.Relative));
-            DrawCard();
+            DrawCard(100, 100, 10, 3);
         }
 
-        private void DrawCard()
+        private void DrawCard(int x, int y, int symbol, int suit)
         {
-            //Crear color
-            //Color Color1 = new Color(); Color1.A = 255; Color1.R = 255; Color1.G = Color1.R; Color1.B = Color1.R;
-            //Color Color2 = new Color(); Color2.A = 255; Color2.R = 225; Color2.G = Color2.R; Color2.B = Color2.R;
-            Color Color3 = new Color(); Color3.A = 255; Color3.R = 207; Color3.G = Color3.R; Color3.B = Color3.R;
-            Color Color4 = new Color(); Color4.A = 255; Color4.R = 255; Color4.G = 0; Color4.B = 0;
+            //Color borde
+            Color ColorStroke = new Color(); ColorStroke.A = 255; ColorStroke.R = 207; ColorStroke.G = ColorStroke.R; ColorStroke.B = ColorStroke.R;
 
-            //LinearGradientBrush newColor = new LinearGradientBrush(Color1, Color2, new System.Windows.Point(0, 0), new System.Windows.Point(0, 2));
-            SolidColorBrush newColor2 = new SolidColorBrush(Color3);
-            rctTest2.Width = 121;
-            rctTest2.Height = 189;
-            rctTest2.Stroke = newColor2;
+            Color ColorValue;
+            //Color Letra
+            if (suit > 1) //Trevor, Pica
+            {
+                ColorValue = new Color(); ColorValue.A = 255; ColorValue.R = 0; ColorValue.G = 0; ColorValue.B = 0;
+            }
+            else //Corazon, Diamante
+            {
+                ColorValue = new Color(); ColorValue.A = 255; ColorValue.R = 255; ColorValue.G = 0; ColorValue.B = 0;
+            }
 
-            //BitmapImage img = new BitmapImage(new Uri(@"Resources/Corazon.png", UriKind.Relative));
+            Char Sym;
 
-            rctTest2.Fill = new ImageBrush { ImageSource = imgImagePlace.Source};
-            rctTest2.StrokeThickness = 3;
-            rctTest2.RadiusX = 10;
-            rctTest2.RadiusY = rctTest.RadiusX;
+            //Letra a mostrar
+            switch (symbol)
+            {
+                case 1: Sym = 'A'; break;
+                case 11: Sym = 'J'; break;
+                case 12: Sym = 'Q'; break;
+                case 13: Sym = 'K'; break;
+                default: Sym = (char)symbol; break;
+            }
 
-            lblTest2.FontFamily = new FontFamily("Source Sans Pro");
-            lblTest2.FontSize = 40;
-            lblTest2.Content = "11";
-            lblTest2.Foreground = new SolidColorBrush(Color4);
-            Thickness newMargin = lblTest2.Margin;
-            newMargin.Left = rctTest2.Margin.Left; newMargin.Top = rctTest2.Margin.Top;
-            lblTest2.Margin = newMargin;
+            //Crear nuevos controles
+            Grid      grdNew = new Grid();
+            Rectangle rctNew = new Rectangle();
+            Label     lblNew = new Label();
+            Image     imgNew = new Image();
 
-            newMargin = imgTest2.Margin;
-            newMargin.Left = rctTest2.Margin.Left + (rctTest2.Width/2) - (imgTest2.Width/2); newMargin.Top = rctTest2.Margin.Top + (rctTest2.Height / 2) - (imgTest2.Height / 2);
-            imgTest2.Margin = newMargin;
-            imgTest2.Width = 110; imgTest2.Height = imgTest2.Width;
+            grdMaster.Children.Add(grdNew);
 
+            //Grid Base
+            Thickness marginGrid = new Thickness(x, y, 0, 0);
+            grdNew.Margin = marginGrid;
+            grdNew.Width = 121;
+            grdNew.Height = 189;
+            grdNew.Children.Add(rctNew);
+            grdNew.Children.Add(lblNew);
+            grdNew.Children.Add(imgNew);
 
+            //Carta (rectangulo)
+            Thickness marginCard = new Thickness(0, 0, 0, 0);
+            rctNew.Margin = marginCard;
+
+            rctNew.Width = 121;
+            rctNew.Height = 189;
+            rctNew.Stroke =  new SolidColorBrush(ColorStroke);
+
+            rctNew.Fill = new ImageBrush { ImageSource = imgImagePlace.Source};
+            rctNew.StrokeThickness = 3;
+            rctNew.RadiusX = 10;
+            rctNew.RadiusY = rctTest.RadiusX;
+
+            //Numero o Valor
+            lblNew.FontFamily = new FontFamily("Source Sans Pro");
+            lblNew.FontSize = 45;
+            lblNew.Content = "K";
+            lblNew.Foreground = new SolidColorBrush(ColorValue);
+
+            Thickness marginValue = new Thickness(rctNew.Margin.Left + 7, rctNew.Margin.Top, 0, 0);
+            lblNew.Margin = marginValue;
+
+            //Icono
+            imgNew.Width = 89; imgNew.Height = imgNew.Width;
+            imgNew.Source = new BitmapImage(new Uri(@"Resources/Pica.png", UriKind.Relative));
+
+        }
+
+        private void Animate(Control obj)
+        {
+            //Crear transforms
+            RotateTransform myRotateTransform = new RotateTransform();
+            TranslateTransform myTranslate = new TranslateTransform();
+            ScaleTransform myScaleTransform = new ScaleTransform();
+
+            //Asignar
+            TransformGroup myTransformGroup = new TransformGroup();
+            myTransformGroup.Children.Add(myTranslate);
+            myTransformGroup.Children.Add(myScaleTransform);
+            myTransformGroup.Children.Add(myRotateTransform);
+            obj.RenderTransform = myTransformGroup;
+
+            //Animar
+            DoubleAnimation aniX = new DoubleAnimation(0, 1000, TimeSpan.FromSeconds(5));
+            DoubleAnimation aniY = new DoubleAnimation(0, 0, TimeSpan.FromSeconds(5));
+            DoubleAnimation aniAngle = new DoubleAnimation(0, 45, TimeSpan.FromSeconds(5));
+
+            //Empezar
+            myTranslate.BeginAnimation(TranslateTransform.XProperty, aniX);
+            myTranslate.BeginAnimation(TranslateTransform.YProperty, aniY);
+            myRotateTransform.BeginAnimation(RotateTransform.AngleProperty, aniAngle);
         }
     }
 }

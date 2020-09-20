@@ -6,20 +6,26 @@
         xmlns:local="clr-namespace:BlackJack"
         mc:Ignorable="d"
         Title="Game" Height="450" Width="800">
-    <Grid>
+    <Grid x:Name="grdMaster" Background="#FFBFBFBF">
 
-        <Button x:Name="btnPedir" Content="Pedir" HorizontalAlignment="Left" Margin="236,313,0,0" VerticalAlignment="Top" Width="75" Click="btnPedir_Click"/>
-        <Button Name="btnPlantar" Content="Plantarse" HorizontalAlignment="Left" Margin="469,313,0,0" VerticalAlignment="Top" Width="75" Click="btnPlantar_Click"/>
-        <Rectangle Name="rctTest" HorizontalAlignment="Left" Height="189" Margin="42,64,0,0" VerticalAlignment="Top" Width="121" Stroke="#FFCFCFCF" RadiusX="10" RadiusY="10" StrokeThickness="3">
-            <Rectangle.Fill>
-                <ImageBrush ImageSource="Resources/rect1678-5-1.png"/>
-            </Rectangle.Fill>
-        </Rectangle>
+        <Button x:Name="btnPedir" Content="Pedir" HorizontalAlignment="Left" Margin="236,354,0,0" VerticalAlignment="Top" Width="75" Click="btnPedir_Click" Height="22"/>
+        <Button Name="btnPlantar" Content="Plantarse" HorizontalAlignment="Left" Margin="469,354,0,0" VerticalAlignment="Top" Width="75" Click="btnPlantar_Click" Height="22"/>
+        <Grid Name="grdTest" Margin="48,146,612,141">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Rectangle x:Name="rctTest" HorizontalAlignment="Left" Height="189" VerticalAlignment="Top" Width="121" Stroke="#FFCFCFCF" RadiusX="10" RadiusY="10" StrokeThickness="3" Grid.ColumnSpan="2">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="Resources/rect1678-5-1.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Image x:Name="imgImage" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2"/>
+            <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2"/>
+        </Grid>
         <Rectangle Name="rctTest2" HorizontalAlignment="Left" Height="121" Margin="199,64,0,0" Stroke="Black" StrokeThickness="3" VerticalAlignment="Top" Width="112" Fill="White"/>
-        <Image x:Name="imgImage" HorizontalAlignment="Left" Height="110" Margin="48,105,0,0" VerticalAlignment="Top" Width="110" Source="Resources/Dimante.png"/>
-        <Label Content="11" HorizontalAlignment="Left" Margin="42,64,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40"/>
         <Image x:Name="imgImagePlace" HorizontalAlignment="Left" Height="46" Margin="-88,48,0,0" VerticalAlignment="Top" Width="46" Source="Resources/Dimante.png"/>
-        <Label Name="lblTest2" Content="Label" HorizontalAlignment="Left" Margin="211,106,0,0" VerticalAlignment="Top"/>
-        <Image x:Name="imgTest2" HorizontalAlignment="Left" Height="49" Margin="254,97,0,0" VerticalAlignment="Top" Width="47" Source="Resources/Dimante.png"/>
+        <Label Name="lblTest2" Content="Label" HorizontalAlignment="Left" Margin="211,147,0,0" VerticalAlignment="Top" Height="26" Width="38"/>
+        <Image x:Name="imgTest2" Height="49" Margin="382,108,363,0" VerticalAlignment="Top" Source="Resources/Dimante.png"/>
     </Grid>
 </Window>
