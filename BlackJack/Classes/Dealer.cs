@@ -8,22 +8,29 @@ namespace BlackJack.Classes
 {
     class Dealer
     {
-        List<Card> deck = new List<Card>();
-        List<Card> hand = new List<Card>();
+        public List<Card> deck = new List<Card>();
+        public List<Card> hand = new List<Card>();
+
+        /*public Dealer() //Contructor
+        {
+            Init();
+        }*/
 
         public void Init() //Dar dos cartas al Dealer
         {
-            AddCard(Deal());
+            Generate();
+            //Card a = Deal();
             AddCard(Deal());
         }
 
         public void Generate() //Generar
         {
+            deck.Add(new Card(0, 1)); //fix
             for (int j = 0; j <= 3; j++)
             {
-                for (int i = 0; i <= 12; i++)
+                for (int i = 1; i <= 13; i++)
                 {
-                    deck.Add(new Card(j, i + 1));
+                    deck.Add(new Card(j, i));
                     //deck[j * 13 + i] = new Card(j, i+1);
                     //MessageBox.Show((j + 1).ToString() + ":   Value:" + (i + 1).ToString());
                 }

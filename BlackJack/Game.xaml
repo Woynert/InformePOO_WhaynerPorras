@@ -5,17 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlackJack"
         mc:Ignorable="d"
-        Title="Game" Height="450" Width="800">
-    <Grid x:Name="grdMaster" Background="#FFBFBFBF">
+        Title="Game" Height="582" Width="1037.833">
+    <Grid x:Name="grdMaster">
+        <Grid.Background>
+            <RadialGradientBrush>
+                <GradientStop Color="#FF82CF43"/>
+                <GradientStop Color="#FF367E2C" Offset="1"/>
+            </RadialGradientBrush>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
 
-        <Button x:Name="btnPedir" Content="Pedir" HorizontalAlignment="Left" Margin="236,354,0,0" VerticalAlignment="Top" Width="75" Click="btnPedir_Click" Height="22"/>
-        <Button Name="btnPlantar" Content="Plantarse" HorizontalAlignment="Left" Margin="469,354,0,0" VerticalAlignment="Top" Width="75" Click="btnPlantar_Click" Height="22"/>
-        <Grid Name="grdTest" Margin="48,146,612,141">
+        <Button x:Name="btnPedir" Content="Pedir" Margin="0,0,89,10" Click="btnPedir_Click" HorizontalAlignment="Right" Width="74" Height="24" VerticalAlignment="Bottom"/>
+        <Button Name="btnPlantar" Content="Plantarse" Margin="0,0,10,10" Click="btnPlantar_Click" HorizontalAlignment="Right" Width="74" Height="24" VerticalAlignment="Bottom"/>
+        <Grid Name="grdTest" Margin="-154,114,1053,240">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Rectangle x:Name="rctTest" HorizontalAlignment="Left" Height="189" VerticalAlignment="Top" Width="121" Stroke="#FFCFCFCF" RadiusX="10" RadiusY="10" StrokeThickness="3" Grid.ColumnSpan="2">
+            <Rectangle x:Name="rctTest" HorizontalAlignment="Left" Width="121" Stroke="#FFCFCFCF" RadiusX="10" RadiusY="10" StrokeThickness="3" Grid.ColumnSpan="2" Margin="0,0,0,-56" Height="189" VerticalAlignment="Top">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="Resources/rect1678-5-1.png"/>
                 </Rectangle.Fill>
@@ -23,9 +32,6 @@
             <Image x:Name="imgImage" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2"/>
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2"/>
         </Grid>
-        <Rectangle Name="rctTest2" HorizontalAlignment="Left" Height="121" Margin="199,64,0,0" Stroke="Black" StrokeThickness="3" VerticalAlignment="Top" Width="112" Fill="White"/>
         <Image x:Name="imgImagePlace" HorizontalAlignment="Left" Height="46" Margin="-88,48,0,0" VerticalAlignment="Top" Width="46" Source="Resources/Dimante.png"/>
-        <Label Name="lblTest2" Content="Label" HorizontalAlignment="Left" Margin="211,147,0,0" VerticalAlignment="Top" Height="26" Width="38"/>
-        <Image x:Name="imgTest2" Height="49" Margin="382,108,363,0" VerticalAlignment="Top" Source="Resources/Dimante.png"/>
     </Grid>
 </Window>
