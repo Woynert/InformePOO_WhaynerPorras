@@ -27,10 +27,10 @@ namespace BlackJack
         List<Card> leftCards = new List<Card>();
         List<Card> rightCards = new List<Card>();
 
-        int[,] rightPos = new int[9, 3]; //0X 1Y 3Angle
-        int[,] leftPos = new int[9, 3]; //0X 1Y 3Angle
+        double[,] rightPos = new double[9, 3]; //0X 1Y 3Angle
+        double[,] leftPos = new double[9, 3]; //0X 1Y 3Angle
 
-
+        Grid tester;
 
         public Game()
         {
@@ -47,7 +47,42 @@ namespace BlackJack
             Grid _grdSel = grdRightPos1;
             TransformGroup _rot = new TransformGroup();
 
-            for(int l = 0; l < 9; l++)
+            //Left
+            for (int l = 0; l < 9; l++) 
+            {
+                switch (l)
+                {
+                    case 0: _grdSel = grdLeftPos1; break;
+                    case 1: _grdSel = grdLeftPos2; break;
+                    case 2: _grdSel = grdLeftPos3; break;
+                    case 3: _grdSel = grdLeftPos4; break;
+                    case 4: _grdSel = grdLeftPos5; break;
+                    case 5: _grdSel = grdLeftPos6; break;
+                    case 6: _grdSel = grdLeftPos7; break;
+                    case 7: _grdSel = grdLeftPos8; break;
+                    case 8: _grdSel = grdLeftPos9; break;
+                }
+
+                //Posición
+                leftPos[l, 0] = _grdSel.Margin.Left;
+                leftPos[l, 1] = _grdSel.Margin.Top;
+
+                //Rotación
+                _rot = (TransformGroup)_grdSel.RenderTransform;
+                foreach (Transform t in _rot.Children)
+                {
+                    if (t is RotateTransform)
+                    {
+                        RotateTransform _r = (RotateTransform)t;
+                        leftPos[l, 2] = Convert.ToInt32(_r.Angle);
+                    }
+                }
+                _grdSel.Visibility = Visibility.Hidden;
+                //MessageBox.Show("Current rotation angle : " + rightPos[l, 0].ToString());
+            }
+
+            //Right
+            for (int l = 0; l < 9; l++) 
             {
                 switch(l){
                     case 0: _grdSel = grdRightPos1; break;
@@ -62,8 +97,8 @@ namespace BlackJack
                 }
 
                 //Posición
-                rightPos[l, 0] = Convert.ToInt32(_grdSel.Margin.Left);
-                rightPos[l, 1] = Convert.ToInt32(_grdSel.Margin.Top);
+                rightPos[l, 0] = _grdSel.Margin.Left;
+                rightPos[l, 1] = _grdSel.Margin.Top;
 
                 //Rotación
                 _rot = (TransformGroup)_grdSel.RenderTransform;
@@ -80,24 +115,43 @@ namespace BlackJack
             }
             
         }
+        private void btnStart_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
 
         private void btnPedir_Click(object sender, RoutedEventArgs e) //Pedir
         {
-            Card card = dealer.Deal(); 
-            rightCards.Add(card);
-            Grid _card = DrawCard(500, 300, card.Symbol, card.Suit);
-            Animate(_card, 500, 500, 0);
-            Animate(_card, rightPos[rightCards.Count - 1, 0], rightPos[rightCards.Count - 1, 1], 0);// rightPos[rightCards.Count - 1, 2]);
+            for (int h = 0; h < 6; h++)
+            {
+                Card card = dealer.Deal();
+                rightCards.Add(card);
+                Grid _card = DrawCard(Convert.ToInt32(grdMaster.ActualWidth/4), -200, card.Symbol, card.Suit);
+                Animate(_card, rightPos[rightCards.Count - 1, 0], rightPos[rightCards.Count - 1, 1], rightPos[rightCards.Count - 1, 2]);
+
+                Card card2 = dealer.Deal();
+                leftCards.Add(card2);
+                Grid _card2 = DrawCard(Convert.ToInt32(grdMaster.ActualWidth / 4), -200, card2.Symbol, card2.Suit);
+                Animate(_card2, leftPos[leftCards.Count - 1, 0], leftPos[leftCards.Count - 1, 1], leftPos[leftCards.Count - 1, 2]);
+            }
+            
         }
 
         private void btnPlantar_Click(object sender, RoutedEventArgs e) //Plantarse
         {
-            int cont = 0;
-            foreach (Card card in dealer.deck)
+            /*TransformGroup _rot = new TransformGroup();
+
+            _rot = (TransformGroup)tester.RenderTransform;
+            foreach (Transform t in _rot.Children)
             {
-                DrawCard(150 * (cont - card.Suit * 13), 200 * card.Suit, card.Symbol, card.Suit);
-                cont++;
+                if (t is TranslateTransform)
+                {
+                    TranslateTransform _r = (TranslateTransform)t;
+                    MessageBox.Show(Convert.ToInt32(_r.X).ToString() + " : " + Convert.ToInt32(tester.Margin.Left).ToString() + " : " + Convert.ToInt32((tester.Margin.Left + Convert.ToInt32(grdMaster.ActualWidth) - 121)/2).ToString());
+                }
             }
+            Animate(tester, 0, 0, 180);*/
+
         }
 
         private int Check(List<Card> hand) //Sacar Valor
@@ -115,8 +169,11 @@ namespace BlackJack
            
             int wt = 121;
             int ht = 189;
-            y += -Convert.ToInt32(grdMaster.ActualHeight) + ht;
+            x *= 2;
+            y *= 2;
             x += -Convert.ToInt32(grdMaster.ActualWidth) +wt;
+            y += -Convert.ToInt32(grdMaster.ActualHeight) + ht;
+            
 
             //Color borde
             Color ColorStroke = new Color(); ColorStroke.A = 255; ColorStroke.R = 207; ColorStroke.G = ColorStroke.R; ColorStroke.B = ColorStroke.R;
@@ -215,16 +272,18 @@ namespace BlackJack
             return (grdNew);
         }
 
-        private void Animate(Grid obj, int x, int y, int angle)
+        private void Animate(Grid obj, double x, double y, double angle)
         {
-            int wt = Convert.ToInt32(obj.ActualWidth / 2);
-            int ht = Convert.ToInt32(obj.ActualHeight / 2);
+            double wt = obj.ActualWidth / 2;
+            double ht = obj.ActualHeight / 2;
+
+            float segundos = 0.5f;
 
             //Crear transforms
             RotateTransform myRotateTransform = new RotateTransform();
             TranslateTransform myTranslate = new TranslateTransform();
-            myTranslate.X = Convert.ToInt32(obj.Margin.Left);
-            myTranslate.Y = Convert.ToInt32(obj.Margin.Top);
+            //myTranslate.X = Convert.ToInt32(obj.Margin.Left);
+            //myTranslate.Y = Convert.ToInt32(obj.Margin.Top);
             ScaleTransform myScaleTransform = new ScaleTransform();
             myRotateTransform.CenterX = wt;
             myRotateTransform.CenterY = ht; 
@@ -237,11 +296,15 @@ namespace BlackJack
             obj.RenderTransform = myTransformGroup;
 
             //Animar
-            DoubleAnimation aniX = new DoubleAnimation(Convert.ToInt32(obj.Margin.Left), x, TimeSpan.FromSeconds(1));
-            DoubleAnimation aniY = new DoubleAnimation(Convert.ToInt32(obj.Margin.Top), y, TimeSpan.FromSeconds(1));
-            DoubleAnimation aniAngle = new DoubleAnimation(0, angle, TimeSpan.FromSeconds(0));
-            DoubleAnimation aniCenterX = new DoubleAnimation(wt, x+wt, TimeSpan.FromSeconds(0));
-            DoubleAnimation aniCenterY = new DoubleAnimation(ht, y+ht, TimeSpan.FromSeconds(0));
+            double _x = x - (obj.Margin.Left + grdMaster.ActualWidth - 121)/2;
+            double _y = y - (obj.Margin.Top + grdMaster.ActualHeight - 189) / 2;
+
+            //MessageBox.Show(Convert.ToInt32(myTranslate.X).ToString() + " : " + Convert.ToInt32(obj.Margin.Left).ToString());
+            DoubleAnimation aniX = new DoubleAnimation(0, _x, TimeSpan.FromSeconds(segundos));
+            DoubleAnimation aniY = new DoubleAnimation(0, _y, TimeSpan.FromSeconds(segundos));
+            DoubleAnimation aniAngle = new DoubleAnimation(0, angle, TimeSpan.FromSeconds(segundos));
+            DoubleAnimation aniCenterX = new DoubleAnimation(0, _x + 121/2, TimeSpan.FromSeconds(segundos));
+            DoubleAnimation aniCenterY = new DoubleAnimation(0, _y + 189/2, TimeSpan.FromSeconds(segundos));
 
             //Empezar
             myTranslate.BeginAnimation(TranslateTransform.XProperty, aniX);
@@ -250,6 +313,8 @@ namespace BlackJack
             myRotateTransform.BeginAnimation(RotateTransform.CenterXProperty, aniCenterX);
             myRotateTransform.BeginAnimation(RotateTransform.CenterYProperty, aniCenterY);
         }
+
+        
     }
 }
 
