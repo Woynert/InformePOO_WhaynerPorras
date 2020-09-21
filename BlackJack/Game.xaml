@@ -316,6 +316,10 @@
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
         </Grid>
         <Grid x:Name="grdLeftPos9" Margin="359,215,550,149" RenderTransformOrigin="0.5,0.5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="123*"/>
+                <RowDefinition Height="65*"/>
+            </Grid.RowDefinitions>
             <Grid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -328,12 +332,12 @@
                 <ColumnDefinition Width="0*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Rectangle x:Name="rctTest8" HorizontalAlignment="Left" Width="121" Stroke="#FFCFCFCF" RadiusX="10" RadiusY="10" StrokeThickness="3" Grid.ColumnSpan="2" Margin="0,0,0,-56" Height="189" VerticalAlignment="Top" d:IsLocked="True">
+            <Rectangle x:Name="rctTest8" HorizontalAlignment="Left" Width="121" Stroke="#FFCFCFCF" RadiusX="10" RadiusY="10" StrokeThickness="3" Grid.ColumnSpan="2" Margin="0,0,0,-1" Height="189" VerticalAlignment="Top" d:IsLocked="True" Grid.RowSpan="2">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="Resources/rect1678-5-1.png"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Image x:Name="imgImage8" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2" d:IsLocked="True"/>
+            <Image x:Name="imgImage8" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2" d:IsLocked="True" Grid.RowSpan="2"/>
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
         </Grid>
         <Grid x:Name="grdRightPos9" Margin="767,229,142,135" RenderTransformOrigin="0.5,0.5">
@@ -399,7 +403,12 @@
             <Image x:Name="imgImage17" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2" d:IsLocked="True"/>
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
         </Grid>
-        <Rectangle HorizontalAlignment="Left" Height="410" Stroke="#7F000000" StrokeThickness="3" VerticalAlignment="Top" Width="502" Fill="#3F000000"/>
-        <Rectangle HorizontalAlignment="Left" Height="410" Stroke="#7F000000" StrokeThickness="3" VerticalAlignment="Top" Width="100" Fill="#3F000000"/>
+        <Rectangle HorizontalAlignment="Left" Height="410" Stroke="#7F000000" StrokeThickness="3" VerticalAlignment="Top" Width="502" Fill="#3F000000" Margin="-536,101,0,0"/>
+        <Rectangle HorizontalAlignment="Left" Height="410" Stroke="#7F000000" StrokeThickness="3" VerticalAlignment="Top" Width="100" Fill="#3F000000" Margin="-536,101,0,0"/>
+        <Button Name="btnStart" Content="Empezar" HorizontalAlignment="Left" Margin="20,462,0,0" VerticalAlignment="Top" Width="140" Height="49" Click="btnStart_Click"/>
+
+        <Label x:Name="lblScore" Content="17" HorizontalAlignment="Left" Margin="78,67,0,0" VerticalAlignment="Top" FontFamily="Source Code Pro" FontSize="60" Foreground="White" Initialized="lblScore_Initialized" Width="82" />
+        <Button x:Name="btnHaz" Content="Haz" Margin="0,0,560,41" Click="btnHaz_Click" HorizontalAlignment="Right" Width="54" Height="49" VerticalAlignment="Bottom"/>
+
     </Grid>
 </Window>

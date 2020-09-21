@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace BlackJack
 {
@@ -23,6 +25,7 @@ namespace BlackJack
     {
         public BitmapImage imgCorazon = new BitmapImage(new Uri(@"Resources/Corazon.png", UriKind.Relative));
         Dealer dealer = new Dealer();
+        Player player = new Player();
 
         List<Card> leftCards = new List<Card>();
         List<Card> rightCards = new List<Card>();
@@ -30,7 +33,12 @@ namespace BlackJack
         double[,] rightPos = new double[9, 3]; //0X 1Y 3Angle
         double[,] leftPos = new double[9, 3]; //0X 1Y 3Angle
 
-        Grid tester;
+        //SoundPlayer sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard1); //(@"Resources/GamblingCard1.wav");
+
+        //Grid tester;
+        DispatcherTimer Timer = new DispatcherTimer();
+        int needrightCards = 0;
+        int needLeftCards = 0;
 
         public Game()
         {
@@ -38,6 +46,9 @@ namespace BlackJack
             //iniciar
             setCardPos();
             dealer.Init();
+
+            Timer.Tick += dispatcherTimer_Tick;
+            Timer.Interval = new TimeSpan(0, 0, 0, 0, 200);
         }
         
         private void setCardPos()
@@ -115,24 +126,79 @@ namespace BlackJack
             }
             
         }
-        private void btnStart_Click(object sender, RoutedEventArgs e)
-        {
 
+        private void btnStart_Click(object sender, RoutedEventArgs e) //Nueva Partida
+        {
+            needrightCards = 2;
+            needLeftCards = 2;
+
+            Timer.Start();
+        }
+
+        //Enviar Carta A La Izquierda
+        private void SendCardLeft()
+        {
+            //get
+            Card card = dealer.Deal();
+            //add
+            player.AddCard(card); 
+            //draw
+            Grid cardToDraw = DrawCard(Convert.ToInt32(grdMaster.ActualWidth / 4), -200, card.Symbol, card.Suit);
+            //animate
+            Animate(cardToDraw, leftPos[player.getCardCount() - 1, 0], leftPos[player.getCardCount() - 1, 1], leftPos[player.getCardCount() - 1, 2]);
+            SoundCard();
+            UpdateLabelScore();
+        }
+        //Enviar Carta A La Derecha
+        private void SendCardRight()
+        {
+            //get
+            Card card = dealer.Deal(); 
+            //add
+            dealer.AddCard(card); 
+            //draw
+            Grid cardToDraw = DrawCard(Convert.ToInt32(grdMaster.ActualWidth / 4), -200, card.Symbol, card.Suit); 
+            //animate
+            Animate(cardToDraw, rightPos[dealer.getCardCount() - 1, 0], rightPos[dealer.getCardCount() - 1, 1], rightPos[dealer.getCardCount() - 1, 2]);
+            SoundCard();
+            UpdateLabelScore();
         }
 
         private void btnPedir_Click(object sender, RoutedEventArgs e) //Pedir
         {
-            for (int h = 0; h < 6; h++)
-            {
-                Card card = dealer.Deal();
-                rightCards.Add(card);
-                Grid _card = DrawCard(Convert.ToInt32(grdMaster.ActualWidth/4), -200, card.Symbol, card.Suit);
-                Animate(_card, rightPos[rightCards.Count - 1, 0], rightPos[rightCards.Count - 1, 1], rightPos[rightCards.Count - 1, 2]);
+            SendCardLeft();
+        }
+        private void btnHaz_Click(object sender, RoutedEventArgs e) //Pedir un Haz
+        {
+            Card card = new Card(0, 1);
+            //add
+            player.AddCard(card);
+            //draw
+            Grid cardToDraw = DrawCard(Convert.ToInt32(grdMaster.ActualWidth / 4), -200, card.Symbol, card.Suit);
+            //animate
+            Animate(cardToDraw, leftPos[player.getCardCount() - 1, 0], leftPos[player.getCardCount() - 1, 1], leftPos[player.getCardCount() - 1, 2]);
+            SoundCard();
+            UpdateLabelScore();
+        }
 
-                Card card2 = dealer.Deal();
-                leftCards.Add(card2);
-                Grid _card2 = DrawCard(Convert.ToInt32(grdMaster.ActualWidth / 4), -200, card2.Symbol, card2.Suit);
-                Animate(_card2, leftPos[leftCards.Count - 1, 0], leftPos[leftCards.Count - 1, 1], leftPos[leftCards.Count - 1, 2]);
+        private void dispatcherTimer_Tick(object sender, EventArgs e) //Timer
+        {
+            if(needLeftCards > 0)
+            {
+                //Timer.Tick += dispatcherTimer_Tick;
+                //Timer.Interval = new TimeSpan(0, 0, 0, 0, 500);
+                //Timer.Start();
+                SendCardLeft();
+                needLeftCards--;
+            }
+            else if (needrightCards > 0)
+            {
+                SendCardRight();
+                needrightCards--;
+            }
+            else
+            {
+                Timer.Stop();
             }
             
         }
@@ -159,6 +225,10 @@ namespace BlackJack
             int val = 0;
             for(int i = 0; i < hand.Count; i++)
             {
+                if (hand[i].Score == 1)
+                {
+
+                }
                 val += hand[i].Score;
             }
             return (val);
@@ -314,7 +384,53 @@ namespace BlackJack
             myRotateTransform.BeginAnimation(RotateTransform.CenterYProperty, aniCenterY);
         }
 
-        
+        private void SoundCard()
+        {
+            Random _random = new Random();
+            SoundPlayer sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard3);
+
+            switch (_random.Next(0, 2))
+            {
+                case 2: sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard1); break;
+                case 0: sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard2); break;
+                case 1: sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard3); break;
+            }
+
+            sndPlayer.Load();
+            sndPlayer.Play();
+        }
+
+        private void UpdateLabelScore()
+        {
+            lblScore.Content = Check(player.Hand).ToString();
+        }
+
+        private void lblScore_Initialized(object sender, EventArgs e) //Borde para Score
+        {
+
+            
+            /*Color ColorValue = new Color(); ColorValue.A = 255; ColorValue.R = 0; ColorValue.G = 0; ColorValue.B = 0;
+            int _border = 2;
+
+            for(int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    Label lblNew = new Label();
+                    grdMaster.Children.Add(lblNew);
+
+                    lblNew.FontFamily = new FontFamily("Source Code Pro");
+                    lblNew.FontSize = lblScore.FontSize;
+                    lblNew.Content = lblScore.Content;
+                    lblNew.Foreground = new SolidColorBrush(ColorValue);
+
+                    Thickness marginValue = new Thickness(lblScore.Margin.Left + i * _border, lblScore.Margin.Top + j * _border, 0, 0);
+                    lblNew.Margin = marginValue;
+                }
+            }*/
+            
+            Canvas.SetZIndex(lblScore, 1);
+        }
     }
 }
 

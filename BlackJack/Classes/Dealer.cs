@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BlackJack.Classes
 {
@@ -20,8 +21,8 @@ namespace BlackJack.Classes
         {
             Generate();
             Randomize();
-            AddCard(Deal());
-            AddCard(Deal());
+            //AddCard(Deal());
+            //AddCard(Deal());
         }
 
         public void Generate() //Generar
@@ -36,25 +37,31 @@ namespace BlackJack.Classes
                     //MessageBox.Show((j + 1).ToString() + ":   Value:" + (i + 1).ToString());
                 }
             }
+
+            //MessageBox.Show(deck.Count.ToString());
         }
 
         public void Randomize() //Revolver
         {
-            List<Card> deck_copy = deck;
-            deck = new List<Card>(); //clear
+            List<Card> deck_copy = this.deck.ToList(); 
+
+            //MessageBox.Show(deck_copy.Count.ToString() + " 1: " + this.deck.Count.ToString());
+
+            this.deck = new List<Card>(); //clear
 
             Random _random = new Random();
             int n;
 
+            int _max = deck_copy.Count;
             //vaciar
-            for (int i = 0; i < deck_copy.Count; i++)
+            for (int i = 0; i < _max; i++)
             {
-                n = _random.Next(deck_copy.Count - 1); //sel
-                deck.Add(deck_copy[n]); //assign
+                n = _random.Next(0, deck_copy.Count - 1); //sel
+                this.deck.Add(deck_copy[n]); //assign
                 deck_copy.Remove(deck_copy[n]); //remove
-
             }
 
+            //MessageBox.Show(deck_copy.Count.ToString()+ " 4: " + this.deck.Count.ToString());
         }
 
         public Card Deal() //Seleccionar una carta
@@ -70,6 +77,11 @@ namespace BlackJack.Classes
         public void AddCard(Card newCard)
         {
             hand.Add(newCard);
+        }
+
+        public int getCardCount()
+        {
+            return (hand.Count);
         }
     }
 }
