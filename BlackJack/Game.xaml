@@ -41,13 +41,13 @@
 
         <Button x:Name="btnPedir" Content="Pedir" Margin="0,0,638,41" Click="btnPedir_Click" HorizontalAlignment="Right" Width="140" Height="49" VerticalAlignment="Bottom"/>
         <Button x:Name="btnPlantar" Content="Plantarse" Margin="0,0,274,41" Click="btnPlantar_Click" HorizontalAlignment="Right" Width="140" Height="49" VerticalAlignment="Bottom"/>
-        <Grid x:Name="grdLeftPos1" Margin="176,131,733,233" RenderTransformOrigin="0.5,0.5">
+        <Grid x:Name="grdLeftPos1" Margin="168,124,741,240" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
-                    <RotateTransform Angle="-16.959"/>
-                    <TranslateTransform X="4.198" Y="-6.841"/>
+                    <RotateTransform Angle="-13.319"/>
+                    <TranslateTransform X="7.29" Y="-11.189"/>
                 </TransformGroup>
             </Grid.RenderTransform>
             <Grid.ColumnDefinitions>
@@ -62,14 +62,14 @@
             <Image x:Name="imgImage" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2" d:IsLocked="True"/>
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
         </Grid>
-        <Image x:Name="imgImagePlace" HorizontalAlignment="Left" Height="46" Margin="-88,48,0,0" VerticalAlignment="Top" Width="46" Source="Resources/rect1678-5-1.png"/>
-        <Grid x:Name="grdLeftPos2" Margin="262,92,647,272" RenderTransformOrigin="0.5,0.5">
+        <Image x:Name="imgImagePlace" HorizontalAlignment="Left" Height="73" Margin="-88,3,0,0" VerticalAlignment="Top" Width="46" Source="Resources/rect1678-5-1.png" Stretch="UniformToFill"/>
+        <Grid x:Name="grdLeftPos2" Margin="262,94,647,270" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
-                    <RotateTransform Angle="-3.789"/>
-                    <TranslateTransform X="7.41" Y="1.203"/>
+                    <RotateTransform Angle="-0.149"/>
+                    <TranslateTransform X="12.287" Y="2.582"/>
                 </TransformGroup>
             </Grid.RenderTransform>
             <Grid.ColumnDefinitions>
@@ -84,13 +84,13 @@
             <Image x:Name="imgImage1" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2" d:IsLocked="True"/>
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
         </Grid>
-        <Grid x:Name="grdLeftPos3" Margin="364,98,545,266" RenderTransformOrigin="0.5,0.5">
+        <Grid x:Name="grdLeftPos3" Margin="366,107,543,257" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
-                    <RotateTransform Angle="0.759"/>
-                    <TranslateTransform X="6.431" Y="10.523"/>
+                    <RotateTransform Angle="4.399"/>
+                    <TranslateTransform X="10.132" Y="18.284"/>
                 </TransformGroup>
             </Grid.RenderTransform>
             <Grid.ColumnDefinitions>
@@ -105,13 +105,13 @@
             <Image x:Name="imgImage2" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2" d:IsLocked="True"/>
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
         </Grid>
-        <Grid x:Name="grdLeftPos4" Margin="168,189,741,175" RenderTransformOrigin="0.5,0.5">
+        <Grid x:Name="grdLeftPos4" Margin="168,181,741,183" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
-                    <RotateTransform Angle="-17.126"/>
-                    <TranslateTransform X="-1.082" Y="-7.817"/>
+                    <RotateTransform Angle="-13.486"/>
+                    <TranslateTransform X="-1.584" Y="-13.123"/>
                 </TransformGroup>
             </Grid.RenderTransform>
             <Grid.ColumnDefinitions>
@@ -126,13 +126,13 @@
             <Image x:Name="imgImage5" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2" d:IsLocked="True"/>
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
         </Grid>
-        <Grid x:Name="grdLeftPos5" Margin="256,150,653,214" RenderTransformOrigin="0.5,0.5">
+        <Grid x:Name="grdLeftPos5" Margin="260,154,649,210" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
-                    <RotateTransform Angle="-7.292"/>
-                    <TranslateTransform X="2.121" Y="0.409"/>
+                    <RotateTransform Angle="-3.652"/>
+                    <TranslateTransform X="3.389" Y="0.956"/>
                 </TransformGroup>
             </Grid.RenderTransform>
             <Grid.ColumnDefinitions>
@@ -147,13 +147,13 @@
             <Image x:Name="imgImage4" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2" d:IsLocked="True"/>
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
         </Grid>
-        <Grid x:Name="grdLeftPos6" Margin="359,154,550,210" RenderTransformOrigin="0.5,0.5">
+        <Grid x:Name="grdLeftPos6" Margin="364,159,545,205" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
-                    <RotateTransform Angle="-6.181"/>
-                    <TranslateTransform X="1.321" Y="9.83"/>
+                    <RotateTransform Angle="8.423"/>
+                    <TranslateTransform X="1.531" Y="16.838"/>
                 </TransformGroup>
             </Grid.RenderTransform>
             <Grid.ColumnDefinitions>
@@ -168,7 +168,7 @@
             <Image x:Name="imgImage3" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2" d:IsLocked="True"/>
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
         </Grid>
-        <Grid x:Name="grdRightPos2" Margin="680,98,229,266" RenderTransformOrigin="0.5,0.5">
+        <Grid x:Name="grdRightPos2" Margin="680,99,229,265" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -189,7 +189,7 @@
             <Image x:Name="imgImage10" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2" d:IsLocked="True"/>
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
         </Grid>
-        <Grid x:Name="grdRightPos1" Margin="581,119,328,245" RenderTransformOrigin="0.5,0.5">
+        <Grid x:Name="grdRightPos1" Margin="581,120,328,244" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -231,7 +231,7 @@
             <Image x:Name="imgImage14" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2" d:IsLocked="True"/>
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
         </Grid>
-        <Grid x:Name="grdRightPos5" Margin="658,151,251,213" RenderTransformOrigin="0.5,0.5">
+        <Grid x:Name="grdRightPos5" Margin="661,157,248,207" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -273,13 +273,13 @@
             <Image x:Name="imgImage12" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2" d:IsLocked="True"/>
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
         </Grid>
-        <Grid x:Name="grdLeftPos7" Margin="160,247,749,117" RenderTransformOrigin="0.5,0.5">
+        <Grid x:Name="grdLeftPos7" Margin="160,239,749,125" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
-                    <RotateTransform Angle="-17.126"/>
-                    <TranslateTransform X="-6.363" Y="-8.794"/>
+                    <RotateTransform Angle="-13.486"/>
+                    <TranslateTransform X="-10.458" Y="-15.058"/>
                 </TransformGroup>
             </Grid.RenderTransform>
             <Grid.ColumnDefinitions>
@@ -299,8 +299,8 @@
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
-                    <RotateTransform Angle="-7.292"/>
-                    <TranslateTransform X="-3.534" Y="-0.401"/>
+                    <RotateTransform Angle="-3.652"/>
+                    <TranslateTransform X="-6.127" Y="-0.718"/>
                 </TransformGroup>
             </Grid.RenderTransform>
             <Grid.ColumnDefinitions>
@@ -324,8 +324,8 @@
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
-                    <RotateTransform Angle="-0.275"/>
-                    <TranslateTransform X="-4.268" Y="9.573"/>
+                    <RotateTransform Angle="3.365"/>
+                    <TranslateTransform X="-7.904" Y="16.103"/>
                 </TransformGroup>
             </Grid.RenderTransform>
             <Grid.ColumnDefinitions>
@@ -409,6 +409,7 @@
 
         <Label x:Name="lblScore" Content="17" HorizontalAlignment="Left" Margin="78,67,0,0" VerticalAlignment="Top" FontFamily="Source Code Pro" FontSize="60" Foreground="White" Initialized="lblScore_Initialized" Width="82" />
         <Button x:Name="btnHaz" Content="Haz" Margin="0,0,560,41" Click="btnHaz_Click" HorizontalAlignment="Right" Width="54" Height="49" VerticalAlignment="Bottom"/>
+        <Image x:Name="imgImagePlace2" HorizontalAlignment="Left" Height="73" Margin="-134,3,0,0" VerticalAlignment="Top" Width="46" Source="Resources/back.png" Stretch="UniformToFill"/>
 
     </Grid>
 </Window>

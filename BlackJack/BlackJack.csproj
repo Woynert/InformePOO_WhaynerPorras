@@ -143,5 +143,10 @@
   <ItemGroup>
     <None Include="Resources\GamblingCard3.wav" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\back.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

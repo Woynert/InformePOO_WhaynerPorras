@@ -12,6 +12,7 @@ namespace BlackJack
         int symbol; //11J 12Q 13K
         int score; //1->11
         int color; //0Negro 1Rojo
+        bool back = true;
 
         public Card(int suit, int symbol)
         {
@@ -38,5 +39,6 @@ namespace BlackJack
         public int Suit { get => suit; set => suit = value; }
         public int Symbol { get => symbol; set => symbol = value; }
         public int Score { get => score; set => score = value; }
+        public bool Back { get => back; set => back = value; }
     }
 }

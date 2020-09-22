@@ -27,18 +27,25 @@ namespace BlackJack
         Dealer dealer = new Dealer();
         Player player = new Player();
 
-        List<Card> leftCards = new List<Card>();
-        List<Card> rightCards = new List<Card>();
+        //List<Card> leftCards  = new List<Card>();
+        //List<Card> rightCards = new List<Card>();
+
+        List<Grid> gridLeftCards = new List<Grid>();
+        List<Grid> gridRightCards = new List<Grid>();
 
         double[,] rightPos = new double[9, 3]; //0X 1Y 3Angle
         double[,] leftPos = new double[9, 3]; //0X 1Y 3Angle
 
+        bool firtsBack = false;
         //SoundPlayer sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard1); //(@"Resources/GamblingCard1.wav");
 
         //Grid tester;
         DispatcherTimer Timer = new DispatcherTimer();
-        int needrightCards = 0;
+        int needRightCards = 0;
         int needLeftCards = 0;
+
+        readonly int cardW = 121;
+        readonly int cardH = 189;
 
         public Game()
         {
@@ -129,9 +136,9 @@ namespace BlackJack
 
         private void btnStart_Click(object sender, RoutedEventArgs e) //Nueva Partida
         {
-            needrightCards = 2;
+            needRightCards = 2;
             needLeftCards = 2;
-
+            firtsBack = true;
             Timer.Start();
         }
 
@@ -143,23 +150,31 @@ namespace BlackJack
             //add
             player.AddCard(card); 
             //draw
-            Grid cardToDraw = DrawCard(Convert.ToInt32(grdMaster.ActualWidth / 4), -200, card.Symbol, card.Suit);
+            Grid cardToDraw = DrawCard(Convert.ToInt32(grdMaster.ActualWidth / 4), -200, card.Symbol, card.Suit, false);
+            //add to gridlist
+            gridLeftCards.Add(cardToDraw);
             //animate
             Animate(cardToDraw, leftPos[player.getCardCount() - 1, 0], leftPos[player.getCardCount() - 1, 1], leftPos[player.getCardCount() - 1, 2]);
+            //sound
             SoundCard();
             UpdateLabelScore();
         }
+
         //Enviar Carta A La Derecha
-        private void SendCardRight()
+        private void SendCardRight(bool back)
         {
             //get
             Card card = dealer.Deal(); 
+            card.Back = back;
             //add
             dealer.AddCard(card); 
             //draw
-            Grid cardToDraw = DrawCard(Convert.ToInt32(grdMaster.ActualWidth / 4), -200, card.Symbol, card.Suit); 
+            Grid cardToDraw = DrawCard(Convert.ToInt32(grdMaster.ActualWidth / 4), -200, card.Symbol, card.Suit, card.Back);
+            //add to gridlist
+            gridRightCards.Add(cardToDraw);
             //animate
             Animate(cardToDraw, rightPos[dealer.getCardCount() - 1, 0], rightPos[dealer.getCardCount() - 1, 1], rightPos[dealer.getCardCount() - 1, 2]);
+            //sound
             SoundCard();
             UpdateLabelScore();
         }
@@ -168,33 +183,35 @@ namespace BlackJack
         {
             SendCardLeft();
         }
+
         private void btnHaz_Click(object sender, RoutedEventArgs e) //Pedir un Haz
         {
             Card card = new Card(0, 1);
             //add
             player.AddCard(card);
             //draw
-            Grid cardToDraw = DrawCard(Convert.ToInt32(grdMaster.ActualWidth / 4), -200, card.Symbol, card.Suit);
+            Grid cardToDraw = DrawCard(Convert.ToInt32(grdMaster.ActualWidth / 4), -200, card.Symbol, card.Suit, false);
             //animate
             Animate(cardToDraw, leftPos[player.getCardCount() - 1, 0], leftPos[player.getCardCount() - 1, 1], leftPos[player.getCardCount() - 1, 2]);
             SoundCard();
             UpdateLabelScore();
+            ChangeSide(gridRightCards[0], false);
         }
 
         private void dispatcherTimer_Tick(object sender, EventArgs e) //Timer
         {
             if(needLeftCards > 0)
             {
-                //Timer.Tick += dispatcherTimer_Tick;
-                //Timer.Interval = new TimeSpan(0, 0, 0, 0, 500);
-                //Timer.Start();
                 SendCardLeft();
                 needLeftCards--;
             }
-            else if (needrightCards > 0)
+            else if (needRightCards > 0)
             {
-                SendCardRight();
-                needrightCards--;
+                if (dealer.getCardCount() > 0) {
+                    SendCardRight(true); 
+                }
+                else SendCardRight(false);
+                needRightCards--;
             }
             else
             {
@@ -213,7 +230,7 @@ namespace BlackJack
                 if (t is TranslateTransform)
                 {
                     TranslateTransform _r = (TranslateTransform)t;
-                    MessageBox.Show(Convert.ToInt32(_r.X).ToString() + " : " + Convert.ToInt32(tester.Margin.Left).ToString() + " : " + Convert.ToInt32((tester.Margin.Left + Convert.ToInt32(grdMaster.ActualWidth) - 121)/2).ToString());
+                    MessageBox.Show(Convert.ToInt32(_r.X).ToString() + " : " + Convert.ToInt32(tester.Margin.Left).ToString() + " : " + Convert.ToInt32((tester.Margin.Left + Convert.ToInt32(grdMaster.ActualWidth) - cardW)/2).ToString());
                 }
             }
             Animate(tester, 0, 0, 180);*/
@@ -223,30 +240,43 @@ namespace BlackJack
         private int Check(List<Card> hand) //Sacar Valor
         {
             int val = 0;
+            int HazCount = 0;
             for(int i = 0; i < hand.Count; i++)
             {
-                if (hand[i].Score == 1)
+                if (hand[i].Score == 1) //Haz detectado
                 {
-
+                    HazCount++;
+                    /*if (val + 11 <= 21)
+                    {
+                        val += 11;
+                    }
+                    else val += 1;*/
                 }
-                val += hand[i].Score;
+                else val += hand[i].Score;
+            }
+            for (int i = 1; i <= HazCount; i++)
+            {
+                if (val + 11 <= 21)
+                {
+                    val += 11;
+                }
+                else val += 1;
             }
             return (val);
         }
 
-        private Grid DrawCard(int x, int y, int symbol, int suit)
+        private Grid DrawCard(int x, int y, int symbol, int suit, bool back)
         {
            
-            int wt = 121;
-            int ht = 189;
+            int wt = cardW;
+            int ht = cardH;
             x *= 2;
             y *= 2;
             x += -Convert.ToInt32(grdMaster.ActualWidth) +wt;
             y += -Convert.ToInt32(grdMaster.ActualHeight) + ht;
-            
 
             //Color borde
-            Color ColorStroke = new Color(); ColorStroke.A = 255; ColorStroke.R = 207; ColorStroke.G = ColorStroke.R; ColorStroke.B = ColorStroke.R;
+            Color ColorStroke = new Color(); ColorStroke.A = 255; ColorStroke.R = 180; ColorStroke.G = ColorStroke.R; ColorStroke.B = ColorStroke.R;
             
             //Color Letra
             Color ColorValue;
@@ -294,10 +324,11 @@ namespace BlackJack
             }
 
             //Crear nuevos controles
-            Grid      grdNew = new Grid();
-            Rectangle rctNew = new Rectangle();
-            Label     lblNew = new Label();
-            Image     imgNew = new Image();
+            Grid      grdNew  = new Grid();
+            Rectangle rctNew  = new Rectangle();
+            Label     lblNew  = new Label();
+            Image     imgNew  = new Image();
+            Image     img2New = new Image();
 
             grdMaster.Children.Add(grdNew);
 
@@ -309,6 +340,7 @@ namespace BlackJack
             grdNew.Children.Add(rctNew);
             grdNew.Children.Add(lblNew);
             grdNew.Children.Add(imgNew);
+            grdNew.Children.Add(img2New);
 
             //Carta (rectangulo)
             Thickness marginCard = new Thickness(0, 0, 0, 0);
@@ -337,9 +369,69 @@ namespace BlackJack
             imgNew.Margin = marginIcon;
 
             imgNew.Width = 89; imgNew.Height = imgNew.Width;
-            imgNew.Source = btmIcon;// new BitmapImage(new Uri(@"Resources/Pica.png", UriKind.Relative));
+            imgNew.Source = btmIcon; //new BitmapImage(new Uri(@"Resources/Pica.png", UriKind.Relative));
 
+            //MiniIcon
+            img2New.Width = 30; img2New.Height = img2New.Width;
+
+            Thickness marginIcon2 = new Thickness(cardW/2 + img2New.Width/3, -cardH +img2New.Width*2 +8, 0, 0);
+            img2New.Margin = marginIcon2;
+            img2New.Source = btmIcon;
+            ChangeSide(grdNew, back);
             return (grdNew);
+        }
+
+        private void ChangeSide(Grid obj, bool back)
+        {
+            if (back) { //Mostrar Lado Trasero
+                foreach (UIElement elm in obj.Children)
+                {
+                    if (elm is Rectangle)
+                    {
+                        //Color borde
+                        Rectangle rec = (Rectangle)elm;
+
+                        Color ColorStroke = new Color(); ColorStroke.A = 255; ColorStroke.R = 250; ColorStroke.G = ColorStroke.R; ColorStroke.B = ColorStroke.R;
+                        rec.Stroke = new SolidColorBrush(ColorStroke);
+
+                        rec.Fill = new ImageBrush { ImageSource = imgImagePlace2.Source };
+                    }
+                    if (elm is Image)
+                    {
+                        elm.Visibility = Visibility.Hidden;
+                    }
+                
+                    if (elm is Label)
+                    {
+                        elm.Visibility = Visibility.Hidden;
+                    }
+                }
+            }
+            else //Mostrar Frente
+            {
+                foreach (UIElement elm in obj.Children)
+                {
+                    if (elm is Rectangle)
+                    {
+                        //Color borde
+                        Rectangle rec = (Rectangle)elm;
+
+                        Color ColorStroke = new Color(); ColorStroke.A = 255; ColorStroke.R = 180; ColorStroke.G = ColorStroke.R; ColorStroke.B = ColorStroke.R;
+                        rec.Stroke = new SolidColorBrush(ColorStroke);
+
+                        rec.Fill = new ImageBrush { ImageSource = imgImagePlace.Source };
+                    }
+                    if (elm is Image)
+                    {
+                        elm.Visibility = Visibility.Visible;
+                    }
+
+                    if (elm is Label)
+                    {
+                        elm.Visibility = Visibility.Visible;
+                    }
+                }
+            }
         }
 
         private void Animate(Grid obj, double x, double y, double angle)
@@ -366,15 +458,15 @@ namespace BlackJack
             obj.RenderTransform = myTransformGroup;
 
             //Animar
-            double _x = x - (obj.Margin.Left + grdMaster.ActualWidth - 121)/2;
-            double _y = y - (obj.Margin.Top + grdMaster.ActualHeight - 189) / 2;
+            double _x = x - (obj.Margin.Left + grdMaster.ActualWidth - cardW) /2;
+            double _y = y - (obj.Margin.Top + grdMaster.ActualHeight - cardH) / 2;
 
             //MessageBox.Show(Convert.ToInt32(myTranslate.X).ToString() + " : " + Convert.ToInt32(obj.Margin.Left).ToString());
             DoubleAnimation aniX = new DoubleAnimation(0, _x, TimeSpan.FromSeconds(segundos));
             DoubleAnimation aniY = new DoubleAnimation(0, _y, TimeSpan.FromSeconds(segundos));
             DoubleAnimation aniAngle = new DoubleAnimation(0, angle, TimeSpan.FromSeconds(segundos));
-            DoubleAnimation aniCenterX = new DoubleAnimation(0, _x + 121/2, TimeSpan.FromSeconds(segundos));
-            DoubleAnimation aniCenterY = new DoubleAnimation(0, _y + 189/2, TimeSpan.FromSeconds(segundos));
+            DoubleAnimation aniCenterX = new DoubleAnimation(0, _x + cardW / 2, TimeSpan.FromSeconds(segundos));
+            DoubleAnimation aniCenterY = new DoubleAnimation(0, _y + cardH / 2, TimeSpan.FromSeconds(segundos));
 
             //Empezar
             myTranslate.BeginAnimation(TranslateTransform.XProperty, aniX);
