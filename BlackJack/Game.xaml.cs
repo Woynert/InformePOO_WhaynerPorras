@@ -56,12 +56,19 @@ namespace BlackJack
         public Game()
         {
             InitializeComponent();
+
             //iniciar
             setCardPos();
             dealer.Init();
 
+            //Preparar animación
             Timer.Tick += dispatcherTimer_Tick;
             Timer.Interval = new TimeSpan(0, 0, 0, 0, 200);
+
+            //Bloquear control
+            btnPlantar.Visibility = Visibility.Hidden;
+            btnPedir.Visibility = Visibility.Hidden;
+            btnHaz.Visibility = Visibility.Hidden;
         }
         
         private void setCardPos()
@@ -165,8 +172,9 @@ namespace BlackJack
 
             //Change label color (AMARILLO)
             Color color = new Color(); color.A = 20 * 250 / 100; color.R = 0; color.G = 0; color.B = 0;
-            Color color2 = new Color(); color.A = 255; color.R = 255; color.G = 255; color.B = 255;
+            Color color2 = new Color(); color2.A = 255; color2.R = 255; color2.G = 255; color2.B = 0;
             rctScorePlayer.Fill = new SolidColorBrush(color);
+            rctScoreDealer.Fill = new SolidColorBrush(color);
             lblScorePlayer.Foreground = new SolidColorBrush(color2);
             lblScoreDealer.Content = "?";
             showDealerScore = false;
@@ -174,19 +182,23 @@ namespace BlackJack
             //Bloquear control
             btnPlantar.Visibility = Visibility.Hidden; 
             btnPedir.Visibility = Visibility.Hidden;
+            btnStart.Visibility = Visibility.Hidden;
 
             //repartir
             needRightCards = 2;
             needLeftCards = 2;
             timerAction = 1;
             Timer.Start();
+            btnHolder.Focus();
         }
 
         //Enviar Carta A La Izquierda
-        private void SendCardLeft()
+        private void SendCardLeft(bool mA = false)
         {
             //get
-            Card card = dealer.Deal();
+            Card card;
+            if (!mA) card = dealer.Deal();
+            else card = new Card(new Random().Next(0, 4), 1);
             //add
             player.AddCard(card); 
             //draw
@@ -196,7 +208,7 @@ namespace BlackJack
             //animate
             Animate(cardToDraw, leftPos[player.getCardCount() - 1, 0], leftPos[player.getCardCount() - 1, 1], leftPos[player.getCardCount() - 1, 2], Convert.ToInt32(grdMaster.ActualWidth / 4), -200);
             //sound
-            SoundCard();
+            SoundCard(0);
             UpdateLabelScore();
 
             if ((Check(player.Hand) == 21) && (player.getCardCount() == 2))
@@ -206,6 +218,7 @@ namespace BlackJack
                 //Bloquear control
                 btnPlantar.Visibility = Visibility.Hidden;
                 btnPedir.Visibility = Visibility.Hidden;
+                btnHaz.Visibility = Visibility.Hidden;
 
                 //detener reparto
                 needRightCards = 0;
@@ -217,12 +230,13 @@ namespace BlackJack
                 //Bloquear control
                 btnPlantar.Visibility = Visibility.Hidden;
                 btnPedir.Visibility = Visibility.Hidden;
+                btnHaz.Visibility = Visibility.Hidden;
 
-                //Change label color (ROJO)
+                //Change rect color (ROJO)
                 if (Check(player.Hand) > 21)
                 {
-                    Color color = new Color(); color.A = 80; color.R = 255; color.G = 0; color.B = 0; //AMARILLO Color color = new Color(); color.A = 255; color.R = 255; color.G = 255; color.B = 0;
-                    Color color2 = new Color(); color.A = 255; color.R = 255; color.G = 255; color.B = 255;
+                    Color color = new Color(); color.A = 100; color.R = 255; color.G = 0; color.B = 0; //AMARILLO Color color = new Color(); color.A = 255; color.R = 255; color.G = 255; color.B = 0;
+                    Color color2 = new Color(); color2.A = 255; color2.R = 255; color2.G = 255; color2.B = 255;
                     rctScorePlayer.Fill = new SolidColorBrush(color);
                     lblScorePlayer.Foreground = new SolidColorBrush(color2);
                 }
@@ -247,8 +261,15 @@ namespace BlackJack
             //animate
             Animate(cardToDraw, rightPos[dealer.getCardCount() - 1, 0], rightPos[dealer.getCardCount() - 1, 1], rightPos[dealer.getCardCount() - 1, 2], Convert.ToInt32(grdMaster.ActualWidth / 4), -200);
             //sound
-            SoundCard();
+            SoundCard(0);
             UpdateLabelScore();
+
+            //Change rect color (ROJO)
+            if (Check(dealer.Hand) > 21)
+            {
+                Color color = new Color(); color.A = 100; color.R = 255; color.G = 0; color.B = 0;
+                rctScoreDealer.Fill = new SolidColorBrush(color);
+            }
         }
 
         private void btnPedir_Click(object sender, RoutedEventArgs e) //Pedir
@@ -257,28 +278,12 @@ namespace BlackJack
             btnHolder.Focus();
         }
 
-        private void btnHaz_Click(object sender, RoutedEventArgs e) //Pedir un Haz
-        {
-            Card card = new Card(0, 1);
-            //add
-            player.AddCard(card);
-            //draw
-            Grid cardToDraw = DrawCard(Convert.ToInt32(grdMaster.ActualWidth / 4), -200, card.Symbol, card.Suit, false);
-            //add to gridlist
-            gridLeftCards.Add(cardToDraw);
-            //animate
-            Animate(cardToDraw, leftPos[player.getCardCount() - 1, 0], leftPos[player.getCardCount() - 1, 1], leftPos[player.getCardCount() - 1, 2]);
-            SoundCard();
-            UpdateLabelScore();
-            ChangeSide(gridRightCards[0], false);
-
-        }
-
         private void btnPlantar_Click(object sender, RoutedEventArgs e) //Plantarse
         {
             //Bloquear control
             btnPlantar.Visibility = Visibility.Hidden;
             btnPedir.Visibility = Visibility.Hidden;
+            btnHaz.Visibility = Visibility.Hidden;
 
             timerAction = 2;
             Timer.Start();
@@ -309,6 +314,7 @@ namespace BlackJack
                         //Desbloquear control
                         btnPlantar.Visibility = Visibility.Visible;
                         btnPedir.Visibility = Visibility.Visible;
+                        btnHaz.Visibility = Visibility.Visible;
 
                         timerAction = 0; //reset
                         Timer.Stop();
@@ -370,6 +376,9 @@ namespace BlackJack
                     }
                     else
                     {
+                        //Desbloquear Start
+                        btnStart.Visibility = Visibility.Visible;
+
                         //Final de la Animación
                         RepeticionesTimer = 0;
                         RemoveAllCards(ganador);
@@ -539,7 +548,7 @@ namespace BlackJack
 
         private void ChangeSide(Grid obj, bool back)
         {
-            SoundCard(); //sonido
+            SoundCard(0); //sonido
             if (back) { //Mostrar Lado Trasero
                 foreach (UIElement elm in obj.Children)
                 {
@@ -637,18 +646,27 @@ namespace BlackJack
             myRotateTransform.BeginAnimation(RotateTransform.CenterYProperty, aniCenterY);
         }
 
-        private void SoundCard()
+        private void SoundCard(int ind)
         {
-            Random _random = new Random();
             SoundPlayer sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard3);
-
-            switch (_random.Next(0, 2))
+            switch (ind)
             {
-                case 2: sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard1); break;
-                case 0: sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard2); break;
-                case 1: sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard3); break;
+                case 0: //Card
+                    Random _random = new Random();
+                    switch (_random.Next(0, 2))
+                    {
+                        case 2: sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard1); break;
+                        case 0: sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard2); break;
+                        case 1: sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard3); break;
+                    }
+                    break;
+                case 1: //Right
+                    sndPlayer = new SoundPlayer(Properties.Resources.Right);
+                    break;
+                case 2: //Wrong
+                    sndPlayer = new SoundPlayer(Properties.Resources.Wrong);
+                    break;
             }
-
             sndPlayer.Load();
             sndPlayer.Play();
         }
@@ -658,6 +676,11 @@ namespace BlackJack
             lblScorePlayer.Content = Check(player.Hand).ToString();
             if (showDealerScore) lblScoreDealer.Content = Check(dealer.Hand).ToString();
             Canvas.SetZIndex(grdUI, 1);
+        }
+        private void UpdatePartidasPuntuacion()
+        {
+            lblJugadas.Content = partidasJugadas.ToString();
+            lblGanadas.Content = partidasGanadas.ToString();
         }
 
         private void RemoveAllCards(int ganador)
@@ -703,19 +726,25 @@ namespace BlackJack
             {
                 case 0: //Dealer
                     lblWinner.Content = "Perdedor";
+                    SoundCard(2);
                     break;
                 case 1: //Player
                     lblWinner.Content = "Ganador";
                     partidasGanadas++;
+                    SoundCard(1);
                     break;
                 case 2: //empate
                     lblWinner.Content = "Empate";
+                    SoundCard(2);
                     break;
                 case 3: //blackjack
                     lblWinner.Content = "BLACKJACK";
+                    partidasGanadas++;
+                    SoundCard(1);
                     break;
             }
             partidasJugadas++;
+            UpdatePartidasPuntuacion();
 
             //Inicio de la animación
             timerAction = 4;
@@ -749,6 +778,10 @@ namespace BlackJack
             
         }
 
+        private void btnHaz_Click(object sender, RoutedEventArgs e) //Secreto
+        {
+            SendCardLeft(true); 
+        }
     }
 }
 

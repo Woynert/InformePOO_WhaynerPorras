@@ -13,7 +13,7 @@ namespace BlackJack.Classes
 
         public void Init(Card newCard1, Card newCard2) //Dar dos cartas al Player
         {
-            //AddCard(newCard1);
+            //AddCard(newCard1); REEMPLAZADO
             //AddCard(newCard2);
         }
 
@@ -25,7 +25,6 @@ namespace BlackJack.Classes
         {
             hand.Remove(newCard);
         }
-
         public int getCardCount()
         {
             return (hand.Count);
