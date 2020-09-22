@@ -407,9 +407,11 @@
         <Rectangle HorizontalAlignment="Left" Height="410" Stroke="#7F000000" StrokeThickness="3" VerticalAlignment="Top" Width="100" Fill="#3F000000" Margin="-536,101,0,0"/>
         <Button Name="btnStart" Content="Empezar" HorizontalAlignment="Left" Margin="20,462,0,0" VerticalAlignment="Top" Width="140" Height="49" Click="btnStart_Click"/>
 
-        <Label x:Name="lblScore" Content="17" HorizontalAlignment="Left" Margin="78,67,0,0" VerticalAlignment="Top" FontFamily="Source Code Pro" FontSize="60" Foreground="White" Initialized="lblScore_Initialized" Width="82" />
+        <Label x:Name="lblScorePlayer" Content="17" HorizontalAlignment="Left" Margin="78,67,0,0" VerticalAlignment="Top" FontFamily="Source Code Pro" FontSize="60" Foreground="White" Initialized="lblScore_Initialized" Width="82" />
         <Button x:Name="btnHaz" Content="Haz" Margin="0,0,560,41" Click="btnHaz_Click" HorizontalAlignment="Right" Width="54" Height="49" VerticalAlignment="Bottom"/>
         <Image x:Name="imgImagePlace2" HorizontalAlignment="Left" Height="73" Margin="-134,3,0,0" VerticalAlignment="Top" Width="46" Source="Resources/back.png" Stretch="UniformToFill"/>
+        <Label x:Name="lblScoreDealer" Content="17" HorizontalAlignment="Left" Margin="864,67,0,0" VerticalAlignment="Top" FontFamily="Source Code Pro" FontSize="60" Foreground="White" Initialized="lblScore_Initialized" Width="82" />
+        <Label Name="lblWinner" Content="Winner" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="409,420,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FFFFFCFC" Width="212"/>
 
     </Grid>
 </Window>

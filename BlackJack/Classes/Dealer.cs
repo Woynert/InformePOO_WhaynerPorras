@@ -27,6 +27,7 @@ namespace BlackJack.Classes
 
         public void Generate() //Generar
         {
+            deck = new List<Card>();
             deck.Add(new Card(0, 1)); //fix
             for (int j = 0; j <= 3; j++)
             {
@@ -79,9 +80,15 @@ namespace BlackJack.Classes
             hand.Add(newCard);
         }
 
+        public void RemoveCard(Card newCard)
+        {
+            hand.Remove(newCard);
+        }
+
         public int getCardCount()
         {
             return (hand.Count);
         }
+        public List<Card> Hand { get => hand; set => hand = value; }
     }
 }

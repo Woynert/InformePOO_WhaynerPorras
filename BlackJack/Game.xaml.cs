@@ -27,25 +27,26 @@ namespace BlackJack
         Dealer dealer = new Dealer();
         Player player = new Player();
 
-        //List<Card> leftCards  = new List<Card>();
-        //List<Card> rightCards = new List<Card>();
-
         List<Grid> gridLeftCards = new List<Grid>();
         List<Grid> gridRightCards = new List<Grid>();
 
-        double[,] rightPos = new double[9, 3]; //0X 1Y 3Angle
-        double[,] leftPos = new double[9, 3]; //0X 1Y 3Angle
+        double[,] rightPos = new double[18, 3]; //0X 1Y 3Angle //Maximo 18 Cartas
+        double[,] leftPos = new double[18, 3]; //0X 1Y 3Angle
 
-        bool firtsBack = false;
-        //SoundPlayer sndPlayer = new SoundPlayer(Properties.Resources.GamblingCard1); //(@"Resources/GamblingCard1.wav");
-
-        //Grid tester;
         DispatcherTimer Timer = new DispatcherTimer();
+        int timerAction = 0; //0Nada 1RepartirCartas 2MostrarCartasRight 3EntregarCartasDealer 4AnimaciónGanar
+
         int needRightCards = 0;
         int needLeftCards = 0;
 
         readonly int cardW = 121;
         readonly int cardH = 189;
+
+        //Animacion Ganar
+        int RepeticionesTimerMax = 7;
+        int RepeticionesTimer = 0;
+        int ganador = 0; //0dealer 1player 2empate
+
 
         public Game()
         {
@@ -66,19 +67,19 @@ namespace BlackJack
             TransformGroup _rot = new TransformGroup();
 
             //Left
-            for (int l = 0; l < 9; l++) 
+            for (int l = 0; l < 18; l++) 
             {
                 switch (l)
                 {
-                    case 0: _grdSel = grdLeftPos1; break;
-                    case 1: _grdSel = grdLeftPos2; break;
-                    case 2: _grdSel = grdLeftPos3; break;
-                    case 3: _grdSel = grdLeftPos4; break;
-                    case 4: _grdSel = grdLeftPos5; break;
-                    case 5: _grdSel = grdLeftPos6; break;
-                    case 6: _grdSel = grdLeftPos7; break;
-                    case 7: _grdSel = grdLeftPos8; break;
-                    case 8: _grdSel = grdLeftPos9; break;
+                    case 0: case 9: _grdSel = grdLeftPos1; break;
+                    case 1: case 10: _grdSel = grdLeftPos2; break;
+                    case 2: case 11: _grdSel = grdLeftPos3; break;
+                    case 3: case 12: _grdSel = grdLeftPos4; break;
+                    case 4: case 13: _grdSel = grdLeftPos5; break;
+                    case 5: case 14: _grdSel = grdLeftPos6; break;
+                    case 6: case 15: _grdSel = grdLeftPos7; break;
+                    case 7: case 16: _grdSel = grdLeftPos8; break;
+                    case 8: case 17: _grdSel = grdLeftPos9; break;
                 }
 
                 //Posición
@@ -136,9 +137,31 @@ namespace BlackJack
 
         private void btnStart_Click(object sender, RoutedEventArgs e) //Nueva Partida
         {
+            //eliminar cartas
+            for (int j = 0; j < gridLeftCards.Count; j++)
+            {
+                grdMaster.Children.Remove(gridLeftCards[j]);
+            }
+            for (int j = 0; j < gridRightCards.Count; j++)
+            {
+                grdMaster.Children.Remove(gridRightCards[j]);
+            }
+
+            //limpiar y empezar de nuevo
+            dealer.Generate();
+            dealer.Randomize();
+            gridLeftCards = new List<Grid>();
+            player.Hand = new List<Card>();
+            gridRightCards = new List<Grid>();
+            dealer.Hand = new List<Card>();
+
+            RepeticionesTimer = 0;
+            lblWinner.Content = "";
+
+            //repartir
             needRightCards = 2;
             needLeftCards = 2;
-            firtsBack = true;
+            timerAction = 1;
             Timer.Start();
         }
 
@@ -154,10 +177,19 @@ namespace BlackJack
             //add to gridlist
             gridLeftCards.Add(cardToDraw);
             //animate
-            Animate(cardToDraw, leftPos[player.getCardCount() - 1, 0], leftPos[player.getCardCount() - 1, 1], leftPos[player.getCardCount() - 1, 2]);
+            Animate(cardToDraw, leftPos[player.getCardCount() - 1, 0], leftPos[player.getCardCount() - 1, 1], leftPos[player.getCardCount() - 1, 2], Convert.ToInt32(grdMaster.ActualWidth / 4), -200);
             //sound
             SoundCard();
             UpdateLabelScore();
+
+            if ((Check(player.Hand) == 21) && (player.getCardCount() == 2))
+            {
+                Ganador(1);
+
+                //detener reparto
+                needRightCards = 0;
+                needLeftCards = 0;
+            }
         }
 
         //Enviar Carta A La Derecha
@@ -173,7 +205,7 @@ namespace BlackJack
             //add to gridlist
             gridRightCards.Add(cardToDraw);
             //animate
-            Animate(cardToDraw, rightPos[dealer.getCardCount() - 1, 0], rightPos[dealer.getCardCount() - 1, 1], rightPos[dealer.getCardCount() - 1, 2]);
+            Animate(cardToDraw, rightPos[dealer.getCardCount() - 1, 0], rightPos[dealer.getCardCount() - 1, 1], rightPos[dealer.getCardCount() - 1, 2], Convert.ToInt32(grdMaster.ActualWidth / 4), -200);
             //sound
             SoundCard();
             UpdateLabelScore();
@@ -191,6 +223,8 @@ namespace BlackJack
             player.AddCard(card);
             //draw
             Grid cardToDraw = DrawCard(Convert.ToInt32(grdMaster.ActualWidth / 4), -200, card.Symbol, card.Suit, false);
+            //add to gridlist
+            gridLeftCards.Add(cardToDraw);
             //animate
             Animate(cardToDraw, leftPos[player.getCardCount() - 1, 0], leftPos[player.getCardCount() - 1, 1], leftPos[player.getCardCount() - 1, 2]);
             SoundCard();
@@ -198,43 +232,98 @@ namespace BlackJack
             ChangeSide(gridRightCards[0], false);
         }
 
-        private void dispatcherTimer_Tick(object sender, EventArgs e) //Timer
-        {
-            if(needLeftCards > 0)
-            {
-                SendCardLeft();
-                needLeftCards--;
-            }
-            else if (needRightCards > 0)
-            {
-                if (dealer.getCardCount() > 0) {
-                    SendCardRight(true); 
-                }
-                else SendCardRight(false);
-                needRightCards--;
-            }
-            else
-            {
-                Timer.Stop();
-            }
-            
-        }
-
         private void btnPlantar_Click(object sender, RoutedEventArgs e) //Plantarse
         {
-            /*TransformGroup _rot = new TransformGroup();
 
-            _rot = (TransformGroup)tester.RenderTransform;
-            foreach (Transform t in _rot.Children)
+            timerAction = 2;
+            Timer.Start();
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e) //Timer
+        {
+            //MessageBox.Show(RepeticionesTimer.ToString() + " : " + timerAction.ToString());
+            switch (timerAction)
             {
-                if (t is TranslateTransform)
-                {
-                    TranslateTransform _r = (TranslateTransform)t;
-                    MessageBox.Show(Convert.ToInt32(_r.X).ToString() + " : " + Convert.ToInt32(tester.Margin.Left).ToString() + " : " + Convert.ToInt32((tester.Margin.Left + Convert.ToInt32(grdMaster.ActualWidth) - cardW)/2).ToString());
-                }
-            }
-            Animate(tester, 0, 0, 180);*/
+                case 1: //Repartir Cartas
+                    if (needLeftCards > 0)
+                    {
+                        SendCardLeft();
+                        needLeftCards--;
+                    }
+                    else if (needRightCards > 0)
+                    {
+                        if (dealer.getCardCount() > 0) {
+                            SendCardRight(true);
+                        }
+                        else SendCardRight(false);
+                        needRightCards--;
+                    }
+                    else
+                    {
+                        timerAction = 0; //reset
+                        Timer.Stop();
+                    }
+                    break;
 
+                case 2: //Voltear Cartas
+                    bool next = false;
+                    for (int i = 0; i < dealer.getCardCount(); i++)
+                    {
+                        if (dealer.Hand[i].Back)
+                        {
+                            next = true;
+                            dealer.Hand[i].Back = false;
+                            ChangeSide(gridRightCards[i], dealer.Hand[i].Back);
+                            break;
+                        }
+                    }
+                    if (!next)
+                    {
+                        timerAction = 3; //repartir cartas a dealer (postgame)
+                    }
+                    break;
+                case 3:
+                    if (Check(player.Hand) > 21) //Player pasado
+                    {
+                        timerAction = 0; //reset
+                        Timer.Stop(); 
+                        Ganador(0);
+                    }
+                    else if (Check(player.Hand) == Check(dealer.Hand) && (Check(player.Hand) == 21)) //Doble BlackJack!!!
+                    {
+                        Ganador(2);
+                    }
+                    else if (Check(dealer.Hand) <= Check(player.Hand) && Check(dealer.Hand) < 21) //Dealer todavia puede recibir
+                    {
+                        SendCardRight(false);
+                    }
+                    else if (Check(dealer.Hand) > 21) //Dealer pasado
+                    {
+                        timerAction = 0; //reset
+                        Timer.Stop(); 
+                        Ganador(1);
+                    }
+                    else if (Check(dealer.Hand) <= 21 && Check(dealer.Hand) > Check(player.Hand)) //Dealer Gana
+                    {
+                        timerAction = 0; //reset
+                        Timer.Stop(); 
+                        Ganador(0);
+                    }
+                    break;
+                case 4:
+                    //MessageBox.Show(RepeticionesTimer.ToString());
+                    if (RepeticionesTimer < RepeticionesTimerMax)
+                    {
+                        RepeticionesTimer++;
+                    }
+                    else
+                    {
+                        //Final de la Animación
+                        RemoveAllCards(ganador);
+                        Timer.Stop();
+                    }
+                    break;
+            }
         }
 
         private int Check(List<Card> hand) //Sacar Valor
@@ -383,6 +472,7 @@ namespace BlackJack
 
         private void ChangeSide(Grid obj, bool back)
         {
+            SoundCard(); //sonido
             if (back) { //Mostrar Lado Trasero
                 foreach (UIElement elm in obj.Children)
                 {
@@ -434,19 +524,23 @@ namespace BlackJack
             }
         }
 
-        private void Animate(Grid obj, double x, double y, double angle)
+        private void Animate(Grid obj, double x, double y, double angle, double xStart = 0, double yStart = 0, double angleStart = 0)
         {
             double wt = obj.ActualWidth / 2;
             double ht = obj.ActualHeight / 2;
 
             float segundos = 0.5f;
 
+            double _xStart = xStart - (obj.Margin.Left + grdMaster.ActualWidth - cardW) / 2;
+            double _yStart = yStart - (obj.Margin.Top + grdMaster.ActualHeight - cardH) / 2;
+
             //Crear transforms
             RotateTransform myRotateTransform = new RotateTransform();
             TranslateTransform myTranslate = new TranslateTransform();
-            //myTranslate.X = Convert.ToInt32(obj.Margin.Left);
-            //myTranslate.Y = Convert.ToInt32(obj.Margin.Top);
+            myTranslate.X = _xStart; //Convert.ToInt32(obj.Margin.Left);
+            myTranslate.Y = _yStart; //Convert.ToInt32(obj.Margin.Top);
             ScaleTransform myScaleTransform = new ScaleTransform();
+            myRotateTransform.Angle = angleStart;
             myRotateTransform.CenterX = wt;
             myRotateTransform.CenterY = ht; 
 
@@ -458,15 +552,15 @@ namespace BlackJack
             obj.RenderTransform = myTransformGroup;
 
             //Animar
-            double _x = x - (obj.Margin.Left + grdMaster.ActualWidth - cardW) /2;
+            double _x = x - (obj.Margin.Left + grdMaster.ActualWidth - cardW) / 2;
             double _y = y - (obj.Margin.Top + grdMaster.ActualHeight - cardH) / 2;
 
             //MessageBox.Show(Convert.ToInt32(myTranslate.X).ToString() + " : " + Convert.ToInt32(obj.Margin.Left).ToString());
-            DoubleAnimation aniX = new DoubleAnimation(0, _x, TimeSpan.FromSeconds(segundos));
-            DoubleAnimation aniY = new DoubleAnimation(0, _y, TimeSpan.FromSeconds(segundos));
-            DoubleAnimation aniAngle = new DoubleAnimation(0, angle, TimeSpan.FromSeconds(segundos));
-            DoubleAnimation aniCenterX = new DoubleAnimation(0, _x + cardW / 2, TimeSpan.FromSeconds(segundos));
-            DoubleAnimation aniCenterY = new DoubleAnimation(0, _y + cardH / 2, TimeSpan.FromSeconds(segundos));
+            DoubleAnimation aniX = new DoubleAnimation(_xStart, _x, TimeSpan.FromSeconds(segundos));
+            DoubleAnimation aniY = new DoubleAnimation(_yStart, _y, TimeSpan.FromSeconds(segundos));
+            DoubleAnimation aniAngle = new DoubleAnimation(angleStart, angle, TimeSpan.FromSeconds(segundos));
+            DoubleAnimation aniCenterX = new DoubleAnimation(_xStart, _x + cardW / 2, TimeSpan.FromSeconds(segundos));
+            DoubleAnimation aniCenterY = new DoubleAnimation(_yStart, _y + cardH / 2, TimeSpan.FromSeconds(segundos));
 
             //Empezar
             myTranslate.BeginAnimation(TranslateTransform.XProperty, aniX);
@@ -494,7 +588,65 @@ namespace BlackJack
 
         private void UpdateLabelScore()
         {
-            lblScore.Content = Check(player.Hand).ToString();
+            lblScorePlayer.Content = Check(player.Hand).ToString();
+            lblScoreDealer.Content = Check(dealer.Hand).ToString();
+        }
+
+        private void RemoveAllCards(int ganador)
+        {
+
+            int i;
+            if (ganador == 1) //true Player
+            {
+                i = 0;
+                foreach (Grid obj in gridLeftCards)
+                {
+                    Animate(obj, grdMaster.ActualWidth / 2, grdMaster.ActualHeight, 0, leftPos[i, 0], leftPos[i, 1], leftPos[i, 2]);
+                    i++;
+                }
+                i = 0;
+                foreach (Grid obj in gridRightCards)
+                {
+                    Animate(obj, grdMaster.ActualWidth / 2, grdMaster.ActualHeight, 0, rightPos[i, 0], rightPos[i, 1], rightPos[i, 2]);
+                    i++;
+                }
+            }
+            else //false Dealer/Empate
+            {
+                i = 0;
+                foreach (Grid obj in gridLeftCards)
+                {
+                    Animate(obj, grdMaster.ActualWidth / 2, -cardH*2, 0, leftPos[i, 0], leftPos[i, 1], leftPos[i, 2]);
+                    i++;
+                }
+                i = 0;
+                foreach (Grid obj in gridRightCards)
+                {
+                    Animate(obj, grdMaster.ActualWidth / 2, -cardH*2, 0, rightPos[i, 0], rightPos[i, 1], rightPos[i, 2]);
+                    i++;
+                }
+            }
+        }
+
+        private void Ganador(int ganador)
+        {
+            //Timer.Stop();
+            //Inicio de la animación
+            this.ganador = ganador;
+            switch (ganador)
+            {
+                case 0: //Dealer
+                    lblWinner.Content = "Dealer gana";
+                    break;
+                case 1: //Player
+                    lblWinner.Content = "Player gana";
+                    break;
+                case 2: //empate
+                    lblWinner.Content = "DOBLE BLACKJACK (Empate)";
+                    break;
+            }
+            timerAction = 4;
+            Timer.Start();
         }
 
         private void lblScore_Initialized(object sender, EventArgs e) //Borde para Score
@@ -521,7 +673,7 @@ namespace BlackJack
                 }
             }*/
             
-            Canvas.SetZIndex(lblScore, 1);
+            //Canvas.SetZIndex(lblScore, 1);
         }
     }
 }
