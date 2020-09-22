@@ -34,7 +34,7 @@ namespace BlackJack
         double[,] leftPos = new double[18, 3]; //0X 1Y 3Angle
 
         DispatcherTimer Timer = new DispatcherTimer();
-        int timerAction = 0; //0Nada 1RepartirCartas 2MostrarCartasRight 3EntregarCartasDealer 4AnimaciónGanar
+        int timerAction = 0; //0Nada 1RepartirCartas 2MostrarCartasRight 3EntregarCartasDealer(ComprobarGanador) 4AnimaciónGanar 5AnimaciónPasado
 
         int needRightCards = 0;
         int needLeftCards = 0;
@@ -43,10 +43,15 @@ namespace BlackJack
         readonly int cardH = 189;
 
         //Animacion Ganar
-        int RepeticionesTimerMax = 7;
+        int RepeticionesTimer4 = 7;
+        int RepeticionesTimer5 = 3;
         int RepeticionesTimer = 0;
-        int ganador = 0; //0dealer 1player 2empate
+        int ganador = 0; //0dealer 1player 2empate 3blackjack
 
+        //Puntaje
+        int partidasJugadas = 0;
+        int partidasGanadas = 0;
+        bool showDealerScore = false;
 
         public Game()
         {
@@ -158,6 +163,18 @@ namespace BlackJack
             RepeticionesTimer = 0;
             lblWinner.Content = "";
 
+            //Change label color (AMARILLO)
+            Color color = new Color(); color.A = 20 * 250 / 100; color.R = 0; color.G = 0; color.B = 0;
+            Color color2 = new Color(); color.A = 255; color.R = 255; color.G = 255; color.B = 255;
+            rctScorePlayer.Fill = new SolidColorBrush(color);
+            lblScorePlayer.Foreground = new SolidColorBrush(color2);
+            lblScoreDealer.Content = "?";
+            showDealerScore = false;
+
+            //Bloquear control
+            btnPlantar.Visibility = Visibility.Hidden; 
+            btnPedir.Visibility = Visibility.Hidden;
+
             //repartir
             needRightCards = 2;
             needLeftCards = 2;
@@ -184,11 +201,34 @@ namespace BlackJack
 
             if ((Check(player.Hand) == 21) && (player.getCardCount() == 2))
             {
-                Ganador(1);
+                Ganador(3);
+
+                //Bloquear control
+                btnPlantar.Visibility = Visibility.Hidden;
+                btnPedir.Visibility = Visibility.Hidden;
 
                 //detener reparto
                 needRightCards = 0;
                 needLeftCards = 0;
+            }
+            else if (Check(player.Hand) >= 21) //Ya no puede recibir más cartas
+            {
+
+                //Bloquear control
+                btnPlantar.Visibility = Visibility.Hidden;
+                btnPedir.Visibility = Visibility.Hidden;
+
+                //Change label color (ROJO)
+                if (Check(player.Hand) > 21)
+                {
+                    Color color = new Color(); color.A = 80; color.R = 255; color.G = 0; color.B = 0; //AMARILLO Color color = new Color(); color.A = 255; color.R = 255; color.G = 255; color.B = 0;
+                    Color color2 = new Color(); color.A = 255; color.R = 255; color.G = 255; color.B = 255;
+                    rctScorePlayer.Fill = new SolidColorBrush(color);
+                    lblScorePlayer.Foreground = new SolidColorBrush(color2);
+                }
+
+                timerAction = 5;
+                Timer.Start();
             }
         }
 
@@ -214,6 +254,7 @@ namespace BlackJack
         private void btnPedir_Click(object sender, RoutedEventArgs e) //Pedir
         {
             SendCardLeft();
+            btnHolder.Focus();
         }
 
         private void btnHaz_Click(object sender, RoutedEventArgs e) //Pedir un Haz
@@ -230,13 +271,18 @@ namespace BlackJack
             SoundCard();
             UpdateLabelScore();
             ChangeSide(gridRightCards[0], false);
+
         }
 
         private void btnPlantar_Click(object sender, RoutedEventArgs e) //Plantarse
         {
+            //Bloquear control
+            btnPlantar.Visibility = Visibility.Hidden;
+            btnPedir.Visibility = Visibility.Hidden;
 
             timerAction = 2;
             Timer.Start();
+            btnHolder.Focus();
         }
 
         private void dispatcherTimer_Tick(object sender, EventArgs e) //Timer
@@ -260,12 +306,17 @@ namespace BlackJack
                     }
                     else
                     {
+                        //Desbloquear control
+                        btnPlantar.Visibility = Visibility.Visible;
+                        btnPedir.Visibility = Visibility.Visible;
+
                         timerAction = 0; //reset
                         Timer.Stop();
                     }
                     break;
 
                 case 2: //Voltear Cartas
+                    showDealerScore = true;
                     bool next = false;
                     for (int i = 0; i < dealer.getCardCount(); i++)
                     {
@@ -274,6 +325,7 @@ namespace BlackJack
                             next = true;
                             dealer.Hand[i].Back = false;
                             ChangeSide(gridRightCards[i], dealer.Hand[i].Back);
+                            UpdateLabelScore();
                             break;
                         }
                     }
@@ -310,17 +362,32 @@ namespace BlackJack
                         Ganador(0);
                     }
                     break;
-                case 4:
+                case 4: //AnimaciónGanador
                     //MessageBox.Show(RepeticionesTimer.ToString());
-                    if (RepeticionesTimer < RepeticionesTimerMax)
+                    if (RepeticionesTimer < RepeticionesTimer4)
                     {
                         RepeticionesTimer++;
                     }
                     else
                     {
                         //Final de la Animación
+                        RepeticionesTimer = 0;
                         RemoveAllCards(ganador);
                         Timer.Stop();
+                    }
+                    break;
+                case 5: //AmaciónPasado
+                    if (RepeticionesTimer < RepeticionesTimer5)
+                    {
+                        RepeticionesTimer++;
+                    }
+                    else
+                    {
+
+                        //Final de la Animación
+                        RepeticionesTimer = 0;
+                        timerAction = 2; 
+                        Timer.Start();
                     }
                     break;
             }
@@ -589,14 +656,15 @@ namespace BlackJack
         private void UpdateLabelScore()
         {
             lblScorePlayer.Content = Check(player.Hand).ToString();
-            lblScoreDealer.Content = Check(dealer.Hand).ToString();
+            if (showDealerScore) lblScoreDealer.Content = Check(dealer.Hand).ToString();
+            Canvas.SetZIndex(grdUI, 1);
         }
 
         private void RemoveAllCards(int ganador)
         {
 
             int i;
-            if (ganador == 1) //true Player
+            if (ganador == 1 || ganador == 3) //true Player/BlackJack
             {
                 i = 0;
                 foreach (Grid obj in gridLeftCards)
@@ -630,21 +698,26 @@ namespace BlackJack
 
         private void Ganador(int ganador)
         {
-            //Timer.Stop();
-            //Inicio de la animación
             this.ganador = ganador;
             switch (ganador)
             {
                 case 0: //Dealer
-                    lblWinner.Content = "Dealer gana";
+                    lblWinner.Content = "Perdedor";
                     break;
                 case 1: //Player
-                    lblWinner.Content = "Player gana";
+                    lblWinner.Content = "Ganador";
+                    partidasGanadas++;
                     break;
                 case 2: //empate
-                    lblWinner.Content = "DOBLE BLACKJACK (Empate)";
+                    lblWinner.Content = "Empate";
+                    break;
+                case 3: //blackjack
+                    lblWinner.Content = "BLACKJACK";
                     break;
             }
+            partidasJugadas++;
+
+            //Inicio de la animación
             timerAction = 4;
             Timer.Start();
         }
@@ -673,8 +746,9 @@ namespace BlackJack
                 }
             }*/
             
-            //Canvas.SetZIndex(lblScore, 1);
+            
         }
+
     }
 }
 

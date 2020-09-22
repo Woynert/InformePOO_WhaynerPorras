@@ -17,6 +17,33 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
+        <Grid Name="grdUI" Height="485" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="1030">
+
+            <Rectangle Fill="#19000000" HorizontalAlignment="Right" Height="49" Stroke="#00000000" VerticalAlignment="Top" Width="140" Margin="0,412,260,0"/>
+
+            <Rectangle Fill="#19000000" HorizontalAlignment="Right" Height="49" Stroke="#00000000" VerticalAlignment="Top" Width="140" Margin="0,412,630,0"/>
+
+            <Rectangle Fill="#33000000" HorizontalAlignment="Left" Height="64" Stroke="#00000000" VerticalAlignment="Top" Width="190" Margin="840,12,0,0"/>
+
+            <Rectangle x:Name="rctScorePlayer" Fill="#33000000" HorizontalAlignment="Left" Height="64" Stroke="#00000000" VerticalAlignment="Top" Width="190" Margin="0,12,0,0"/>
+
+            <Rectangle Fill="#33000000" HorizontalAlignment="Left" Height="102" Stroke="#00000000" VerticalAlignment="Top" Width="1032" Margin="-1,384,-1,-1"/>
+
+            <Rectangle Fill="#19000000" HorizontalAlignment="Right" Height="102" Stroke="#00000000" VerticalAlignment="Top" Width="167" Margin="0,384,-1,-1"/>
+
+            
+            <Label x:Name="lblScorePlayer" Content="17" HorizontalAlignment="Left" Margin="108,0,0,0" VerticalAlignment="Top" FontFamily="Source Code Pro" FontSize="60" Foreground="Yellow" Initialized="lblScore_Initialized" Width="82" Background="#00000000" />
+            <Label x:Name="lblScoreDealer" Content="17" HorizontalAlignment="Left" Margin="864,0,0,0" VerticalAlignment="Top" FontFamily="Source Code Pro" FontSize="60" Foreground="White" Initialized="lblScore_Initialized" Width="82" />
+            <Label x:Name="lblWinner" Content="Winner" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Margin="409,402,409,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FFFFFCFC" Width="212" FontSize="36" FontFamily="Oswald"/>
+            <Label Content="Jugadas" HorizontalAlignment="Left" Margin="883,401,0,0" VerticalAlignment="Top" Foreground="White" Background="#00000000" Width="74" FontSize="16"/>
+            <Label Content="Label" HorizontalAlignment="Left" Margin="959,401,0,0" VerticalAlignment="Top" Foreground="#FFFFF300" Background="#19000000" FontSize="16"/>
+            <Label Content="Ganadas" HorizontalAlignment="Left" Margin="883,437,0,0" VerticalAlignment="Top" Foreground="White" Background="#00000000" Width="74" FontSize="16"/>
+            <Label Content="Label" HorizontalAlignment="Left" Margin="959,437,0,0" VerticalAlignment="Top" Foreground="#FFFFF300" Background="#19000000" FontSize="16"/>
+            <Button x:Name="btnPedir" Content="Pedir" Margin="260,0,0,24" Click="btnPedir_Click" HorizontalAlignment="Left" Width="140" Height="49" VerticalAlignment="Bottom" Background="{x:Null}" Foreground="White" FontSize="20" BorderBrush="White"/>
+            <Button x:Name="btnPlantar" Content="Plantarse" Margin="0,0,260,24" Click="btnPlantar_Click" HorizontalAlignment="Right" Width="140" Height="49" VerticalAlignment="Bottom" Background="{x:Null}" Foreground="White" FontSize="20" BorderBrush="White"/>
+ 
+        </Grid>
+
         <Grid x:Name="grdRightPos3" Margin="783,129,126,235" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TransformGroup>
@@ -39,8 +66,6 @@
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
         </Grid>
 
-        <Button x:Name="btnPedir" Content="Pedir" Margin="0,0,638,41" Click="btnPedir_Click" HorizontalAlignment="Right" Width="140" Height="49" VerticalAlignment="Bottom"/>
-        <Button x:Name="btnPlantar" Content="Plantarse" Margin="0,0,274,41" Click="btnPlantar_Click" HorizontalAlignment="Right" Width="140" Height="49" VerticalAlignment="Bottom"/>
         <Grid x:Name="grdLeftPos1" Margin="168,124,741,240" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TransformGroup>
@@ -402,16 +427,15 @@
             </Rectangle>
             <Image x:Name="imgImage17" HorizontalAlignment="Left" Height="89" Margin="16,60,0,0" VerticalAlignment="Top" Width="89" Source="Resources/Dimante.png" Grid.ColumnSpan="2" d:IsLocked="True"/>
             <Label Content="11" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#00000000" Foreground="Red" FontFamily="Source Sans Pro" FontSize="40" Grid.ColumnSpan="2" d:IsLocked="True"/>
+            
         </Grid>
         <Rectangle HorizontalAlignment="Left" Height="410" Stroke="#7F000000" StrokeThickness="3" VerticalAlignment="Top" Width="502" Fill="#3F000000" Margin="-536,101,0,0"/>
         <Rectangle HorizontalAlignment="Left" Height="410" Stroke="#7F000000" StrokeThickness="3" VerticalAlignment="Top" Width="100" Fill="#3F000000" Margin="-536,101,0,0"/>
-        <Button Name="btnStart" Content="Empezar" HorizontalAlignment="Left" Margin="20,462,0,0" VerticalAlignment="Top" Width="140" Height="49" Click="btnStart_Click"/>
+        <Button x:Name="btnStart" Content="Empezar" HorizontalAlignment="Left" Margin="69,10,0,0" VerticalAlignment="Top" Width="140" Height="49" Click="btnStart_Click"/>
 
-        <Label x:Name="lblScorePlayer" Content="17" HorizontalAlignment="Left" Margin="78,67,0,0" VerticalAlignment="Top" FontFamily="Source Code Pro" FontSize="60" Foreground="White" Initialized="lblScore_Initialized" Width="82" />
-        <Button x:Name="btnHaz" Content="Haz" Margin="0,0,560,41" Click="btnHaz_Click" HorizontalAlignment="Right" Width="54" Height="49" VerticalAlignment="Bottom"/>
+        <Button x:Name="btnHaz" Content="Haz" Margin="0,0,966,493" Click="btnHaz_Click" HorizontalAlignment="Right" Width="54" Height="49" VerticalAlignment="Bottom"/>
         <Image x:Name="imgImagePlace2" HorizontalAlignment="Left" Height="73" Margin="-134,3,0,0" VerticalAlignment="Top" Width="46" Source="Resources/back.png" Stretch="UniformToFill"/>
-        <Label x:Name="lblScoreDealer" Content="17" HorizontalAlignment="Left" Margin="864,67,0,0" VerticalAlignment="Top" FontFamily="Source Code Pro" FontSize="60" Foreground="White" Initialized="lblScore_Initialized" Width="82" />
-        <Label Name="lblWinner" Content="Winner" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="409,420,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FFFFFCFC" Width="212"/>
+        <Button Name="btnHolder" Content="Button" HorizontalAlignment="Left" Height="49" Margin="-206,3,0,0" VerticalAlignment="Top" Width="54"/>
 
     </Grid>
 </Window>
