@@ -14,8 +14,6 @@ namespace BlackJack.Classes
 
         public void Init() //Dar dos cartas al Dealer
         {
-            Generate();
-            Randomize();
             //AddCard(Deal());
             //AddCard(Deal());
         }

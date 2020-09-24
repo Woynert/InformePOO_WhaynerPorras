@@ -411,11 +411,6 @@ namespace BlackJack
                 if (hand[i].Score == 1) //Haz detectado
                 {
                     HazCount++;
-                    /*if (val + 11 <= 21)
-                    {
-                        val += 11;
-                    }
-                    else val += 1;*/
                 }
                 else val += hand[i].Score;
             }
@@ -677,6 +672,7 @@ namespace BlackJack
             if (showDealerScore) lblScoreDealer.Content = Check(dealer.Hand).ToString();
             Canvas.SetZIndex(grdUI, 1);
         }
+
         private void UpdatePartidasPuntuacion()
         {
             lblJugadas.Content = partidasJugadas.ToString();

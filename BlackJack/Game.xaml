@@ -35,7 +35,7 @@
 
 
             <Label x:Name="lblScorePlayer" Content="00" HorizontalAlignment="Left" Margin="108,0,0,400" FontFamily="Source Code Pro" FontSize="60" Foreground="Yellow" Initialized="lblScore_Initialized" Width="82" Background="#00000000" Height="85" VerticalAlignment="Bottom" />
-            <Label x:Name="lblScoreDealer" Content="00" HorizontalAlignment="Left" Margin="864,0,0,400" VerticalAlignment="Bottom" FontFamily="Source Code Pro" FontSize="60" Foreground="White" Initialized="lblScore_Initialized" Width="82" />
+            <Label x:Name="lblScoreDealer" Content="00" HorizontalAlignment="Left" Margin="840,0,0,400" VerticalAlignment="Bottom" FontFamily="Source Code Pro" FontSize="60" Foreground="White" Initialized="lblScore_Initialized" Width="82" />
             <Label x:Name="lblWinner" Content="Bienvenido" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Margin="409,0,409,20" Background="#00000000" Foreground="#FFFFFCFC" Width="212" FontSize="36" FontFamily="Oswald" Height="63" VerticalAlignment="Bottom"/>
             <Label Content="Intentos" HorizontalAlignment="Left" Margin="878,0,0,50" VerticalAlignment="Bottom" Foreground="White" Background="#00000000" Width="79" FontSize="18" FontFamily="Tahoma"/>
             <Label x:Name="lblJugadas" Content="0" HorizontalAlignment="Left" Margin="962,0,0,51" VerticalAlignment="Bottom" Foreground="#FFFFF300" Background="#19000000" FontSize="20" Width="55" FontFamily="Consolas"/>

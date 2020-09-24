@@ -21,14 +21,17 @@ namespace BlackJack.Classes
         {
             hand.Add(newCard);
         }
+
         public void RemoveCard(Card newCard)
         {
             hand.Remove(newCard);
         }
+
         public int getCardCount()
         {
             return (hand.Count);
         }
+
         public List<Card> Hand { get => hand; set => hand = value; }
 
     }
