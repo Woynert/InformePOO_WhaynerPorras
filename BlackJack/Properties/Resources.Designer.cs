@@ -128,6 +128,16 @@ namespace BlackJack.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Oswald_Regular {
+            get {
+                object obj = ResourceManager.GetObject("Oswald_Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Pica {
@@ -153,6 +163,26 @@ namespace BlackJack.Properties {
         internal static System.IO.UnmanagedMemoryStream Right {
             get {
                 return ResourceManager.GetStream("Right", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] SourceCodePro_Regular {
+            get {
+                object obj = ResourceManager.GetObject("SourceCodePro_Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] SourceSansPro_Regular {
+            get {
+                object obj = ResourceManager.GetObject("SourceSansPro_Regular", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
